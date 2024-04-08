@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      square-box {
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        position: relative;
+      }
+
+      perfect-arrow {
+        display: block;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <square-box id="box1"></square-box>
+    <square-box id="box2" style="left: 100px; top: 200px"></square-box>
+    <perfect-arrow type="box" source="box1" target="box2"></perfect-arrow>
+    <script type="module">
+      import { PerfectArrow } from '/src/index.ts';
+
+      PerfectArrow.register();
+
+      function makeDraggable(el) {
+        console.log(el);
+        function onMouseDrag({ movementX, movementY }) {
+          const { left, top } = window.getComputedStyle(el);
+          let leftValue = parseInt(left);
+          let topValue = parseInt(top);
+          el.style.left = `${leftValue + movementX}px`;
+          el.style.top = `${topValue + movementY}px`;
+        }
+
+        el.addEventListener('mousedown', () => {
+          el.addEventListener('mousemove', onMouseDrag);
+        });
+
+        el.addEventListener('mouseup', () => {
+          el.removeEventListener('mousemove', onMouseDrag);
+        });
+      }
+
+      makeDraggable(document.getElementById('box1'));
+      makeDraggable(document.getElementById('box2'));
+    </script>
+  </body>
+</html>
