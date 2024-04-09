@@ -1,5 +1,5 @@
 {
-  "name": "perfect-arrows-element",
+  "name": "perfect-arrow",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/node": "^20.12.5",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },

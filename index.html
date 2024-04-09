@@ -3,13 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Arrow</title>
     <style>
-      square-box {
+      draggable-box {
         display: block;
         width: 50px;
         height: 50px;
         border: 2px solid black;
         position: relative;
+      }
+
+      draggable-point {
+        display: block;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
       }
 
       perfect-arrow {
@@ -24,8 +32,8 @@
     </style>
   </head>
   <body>
-    <square-box id="box1"></square-box>
-    <square-box id="box2" style="left: 100px; top: 200px"></square-box>
+    <draggable-box id="box1"></draggable-box>
+    <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
     <perfect-arrow type="box" source="box1" target="box2"></perfect-arrow>
     <script type="module">
       import { PerfectArrow } from '/src/index.ts';
