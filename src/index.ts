@@ -50,22 +50,14 @@ export class PerfectArrow extends ReactiveElement {
 
   @property({ type: Boolean }) straights: boolean = true;
 
-  connectedCallback() {
-    super.connectedCallback();
-    this.#sourceCleanup = this.observerSource();
-    this.#targetCleanup = this.observerTarget();
-  }
-
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.#sourceCleanup?.();
-    this.#sourceCleanup = null;
-    this.#targetCleanup?.();
-    this.#targetCleanup = null;
+    this.unobserveSource();
+    this.unobserveTarget();
   }
 
   observerSource() {
-    this.#sourceCleanup?.();
+    this.unobserveSource();
     const el = document.getElementById(this.source);
 
     if (!el) {
@@ -77,8 +69,13 @@ export class PerfectArrow extends ReactiveElement {
     });
   }
 
+  unobserveSource() {
+    this.#sourceCleanup?.();
+    this.#sourceCleanup = null;
+  }
+
   observerTarget() {
-    this.#targetCleanup?.();
+    this.unobserveTarget();
     const el = document.getElementById(this.target);
 
     if (!el) {
@@ -88,6 +85,11 @@ export class PerfectArrow extends ReactiveElement {
       this.#targetRect = rect;
       this.requestUpdate();
     });
+  }
+
+  unobserveTarget() {
+    this.#targetCleanup?.();
+    this.#targetCleanup = null;
   }
 
   getArrow(sourceBox: Rect, targetBox: Rect, options: ArrowOptions): Arrow {
@@ -149,6 +151,7 @@ export class PerfectArrow extends ReactiveElement {
 
     if (!this.shadowRoot) return;
 
+    // TODO: optimize lol
     this.shadowRoot.innerHTML = `
       <svg
         viewBox="0 0 ${width} ${height}"
