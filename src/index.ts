@@ -1,6 +1,7 @@
-import { ReactiveElement, css, PropertyValues } from '@lit/reactive-element';
+import { ReactiveElement, PropertyValues } from '@lit/reactive-element';
 import { property } from '@lit/reactive-element/decorators.js';
-import { getArrow, getBoxToBoxArrow } from 'perfect-arrows';
+import { getArrow, getBoxToBoxArrow, ArrowOptions } from 'perfect-arrows';
+import vizObserver, { Rect } from 'viz-observer';
 
 export type ArrowType = 'point' | 'box';
 
@@ -25,52 +26,75 @@ export class PerfectArrow extends ReactiveElement {
 
   @property({ type: String }) type: ArrowType = 'box';
 
-  @property({ type: String }) target: string | null = null;
+  @property({ type: String }) source: string = '';
+  #sourceCleanup: (() => void) | null = null;
+  #sourceRect!: Rect;
 
-  @property({ type: String }) source: string | null = null;
+  @property({ type: String }) target: string = '';
+  #targetCleanup: (() => void) | null = null;
+  #targetRect!: Rect;
 
-  #targetElement!: Element;
+  @property({ type: Number }) bow: number = 0;
 
-  #sourceElement!: Element;
+  @property({ type: Number }) stretch: number = 0.25;
 
-  get canRenderArrow() {
-    return this.target == null && this.source == null;
-  }
+  @property({ type: Number, attribute: 'stretch-min' }) stretchMin: number = 50;
 
-  observer = new ResizeObserver((entries) => {
-    console.log(entries);
-  });
+  @property({ type: Number, attribute: 'stretch-max' }) stretchMax: number = 420;
+
+  @property({ type: Number, attribute: 'pad-start' }) padStart: number = 0;
+
+  @property({ type: Number, attribute: 'pad-end' }) padEnd: number = 20;
+
+  @property({ type: Boolean }) flip: boolean = false;
+
+  @property({ type: Boolean }) straights: boolean = true;
 
   connectedCallback() {
     super.connectedCallback();
-    this.#sourceElement = this.observeElement(this.source);
-    this.#targetElement = this.observeElement(this.target);
+    this.#sourceCleanup = this.observerSource();
+    this.#targetCleanup = this.observerTarget();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.observer.disconnect();
+    this.#sourceCleanup?.();
+    this.#targetCleanup?.();
   }
 
-  observeElement(id: string | null): Element {
-    if (id == null) throw new Error('id does not exist.');
+  observerSource() {
+    this.#sourceCleanup?.();
+    const el = document.getElementById(this.source);
 
-    const el = document.getElementById(id);
-
-    if (el == null) {
-      throw new Error(`Id '${id}' is not an element.`);
+    if (!el) {
+      throw new Error('source is not a valid element');
     }
-
-    // TODO observer mutations to location
-    this.observer.observe(el);
-
-    return el;
+    return vizObserver(el, (rect) => {
+      this.#sourceRect = rect;
+      this.requestUpdate();
+    });
   }
 
-  getArrow(targetBox: DOMRect, sourceBox: DOMRect): Arrow {
+  observerTarget() {
+    const el = document.getElementById(this.target);
+
+    if (!el) {
+      throw new Error('source is not a valid element');
+    }
+    return vizObserver(el, (rect) => {
+      this.#targetRect = rect;
+      this.requestUpdate();
+    });
+  }
+
+  getArrow(sourceBox: Rect, targetBox: Rect, options: ArrowOptions): Arrow {
     switch (this.type) {
       case 'point': {
-        return getArrow(0, 0, 0, 0) as Arrow;
+        const sourceX = sourceBox.x + sourceBox.width / 2;
+        const sourceY = sourceBox.y + sourceBox.height / 2;
+        const targetX = targetBox.x + targetBox.width / 2;
+        const targetY = targetBox.y + targetBox.height / 2;
+        return getArrow(sourceX, sourceY, targetX, targetY, options) as Arrow;
       }
       case 'box': {
         return getBoxToBoxArrow(
@@ -81,7 +105,8 @@ export class PerfectArrow extends ReactiveElement {
           targetBox.x,
           targetBox.y,
           targetBox.width,
-          targetBox.height
+          targetBox.height,
+          options
         ) as Arrow;
       }
     }
@@ -90,15 +115,31 @@ export class PerfectArrow extends ReactiveElement {
   update(changedProperties: PropertyValues) {
     super.update(changedProperties);
 
-    const targetBox = this.#targetElement?.getBoundingClientRect();
-    const sourceBox = this.#sourceElement?.getBoundingClientRect();
+    if (changedProperties.has('source')) {
+      this.observerSource();
+    }
 
-    const arrow = this.getArrow(targetBox, sourceBox);
+    if (changedProperties.has('target')) {
+      this.observerTarget();
+    }
+
+    const options: ArrowOptions = {
+      bow: this.bow,
+      stretch: this.stretch,
+      stretchMin: this.stretchMin,
+      stretchMax: this.stretchMax,
+      padStart: this.padStart,
+      padEnd: this.padEnd,
+      flip: this.flip,
+      straights: this.straights,
+    };
+
+    const arrow = this.getArrow(this.#sourceRect, this.#targetRect, options);
 
     this.render(arrow);
   }
 
-  render([sx, sy, cx, cy, ex, ey, ae, as, ec]: Arrow) {
+  render([sx, sy, cx, cy, ex, ey, ae]: Arrow) {
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
     const { width, height } = this.getBoundingClientRect();

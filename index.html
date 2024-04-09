@@ -33,7 +33,6 @@
       PerfectArrow.register();
 
       function makeDraggable(el) {
-        console.log(el);
         function onMouseDrag({ movementX, movementY }) {
           const { left, top } = window.getComputedStyle(el);
           let leftValue = parseInt(left);
@@ -43,11 +42,11 @@
         }
 
         el.addEventListener('mousedown', () => {
-          el.addEventListener('mousemove', onMouseDrag);
+          window.addEventListener('mousemove', onMouseDrag);
         });
 
-        el.addEventListener('mouseup', () => {
-          el.removeEventListener('mousemove', onMouseDrag);
+        window.addEventListener('mouseup', () => {
+          window.removeEventListener('mousemove', onMouseDrag);
         });
       }
 

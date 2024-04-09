@@ -11,6 +11,9 @@ dependencies:
   perfect-arrows:
     specifier: ^0.3.7
     version: 0.3.7
+  viz-observer:
+    specifier: ^1.0.0
+    version: 1.0.0
 
 devDependencies:
   typescript:
@@ -496,3 +499,7 @@ packages:
     optionalDependencies:
       fsevents: 2.3.3
     dev: true
+
+  /viz-observer@1.0.0:
+    resolution: {integrity: sha512-/sqTMKszRgFSQHmWk2rqp8hKwiWnoZXYWwOCv8QxjE+cUuYxjO5M1yOsVGWLhf8z3OYn7/ahCr2G3RTcX2ceOg==}
+    dev: false
