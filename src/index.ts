@@ -27,12 +27,12 @@ export class PerfectArrow extends ReactiveElement {
   @property({ type: String }) type: ArrowType = 'box';
 
   @property({ type: String }) source: string = '';
-  #sourceCleanup: (() => void) | null = null;
-  #sourceRect!: Rect;
+  private sourceCleanup: (() => void) | null = null;
+  private sourceRect!: Rect;
 
   @property({ type: String }) target: string = '';
-  #targetCleanup: (() => void) | null = null;
-  #targetRect!: Rect;
+  private targetCleanup: (() => void) | null = null;
+  private targetRect!: Rect;
 
   @property({ type: Number }) bow: number = 0;
 
@@ -64,14 +64,14 @@ export class PerfectArrow extends ReactiveElement {
       throw new Error('source is not a valid element');
     }
     return vizObserver(el, (rect) => {
-      this.#sourceRect = rect;
+      this.sourceRect = rect;
       this.requestUpdate();
     });
   }
 
   unobserveSource() {
-    this.#sourceCleanup?.();
-    this.#sourceCleanup = null;
+    this.sourceCleanup?.();
+    this.sourceCleanup = null;
   }
 
   observerTarget() {
@@ -82,14 +82,14 @@ export class PerfectArrow extends ReactiveElement {
       throw new Error('source is not a valid element');
     }
     return vizObserver(el, (rect) => {
-      this.#targetRect = rect;
+      this.targetRect = rect;
       this.requestUpdate();
     });
   }
 
   unobserveTarget() {
-    this.#targetCleanup?.();
-    this.#targetCleanup = null;
+    this.targetCleanup?.();
+    this.targetCleanup = null;
   }
 
   getArrow(sourceBox: Rect, targetBox: Rect, options: ArrowOptions): Arrow {
@@ -121,11 +121,11 @@ export class PerfectArrow extends ReactiveElement {
     super.update(changedProperties);
 
     if (changedProperties.has('source')) {
-      this.#sourceCleanup = this.observerSource();
+      this.sourceCleanup = this.observerSource();
     }
 
     if (changedProperties.has('target')) {
-      this.#targetCleanup = this.observerTarget();
+      this.targetCleanup = this.observerTarget();
     }
 
     const options: ArrowOptions = {
@@ -139,7 +139,7 @@ export class PerfectArrow extends ReactiveElement {
       straights: this.straights,
     };
 
-    const arrow = this.getArrow(this.#sourceRect, this.#targetRect, options);
+    const arrow = this.getArrow(this.sourceRect, this.targetRect, options);
 
     this.render(arrow);
   }

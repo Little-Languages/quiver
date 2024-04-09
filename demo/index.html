@@ -45,29 +45,35 @@
     <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
     <perfect-arrow type="box" source="box1" target="box2"></perfect-arrow>
     <script type="module">
-      import { PerfectArrow } from '/src/index.ts';
+      import { PerfectArrow } from '../src/index.ts';
 
       PerfectArrow.register();
 
-      function makeDraggable(el) {
-        function onMouseDrag({ movementX, movementY }) {
-          const { left, top } = window.getComputedStyle(el);
-          let leftValue = parseInt(left);
-          let topValue = parseInt(top);
-          el.style.left = `${leftValue + movementX}px`;
-          el.style.top = `${topValue + movementY}px`;
+      class DraggableBox extends HTMLElement {
+        constructor() {
+          super();
+
+          this.onMouseDrag = this.onMouseDrag.bind(this);
+
+          this.addEventListener('mousedown', () => {
+            window.addEventListener('mousemove', this.onMouseDrag);
+          });
+
+          window.addEventListener('mouseup', () => {
+            window.removeEventListener('mousemove', this.onMouseDrag);
+          });
         }
 
-        el.addEventListener('mousedown', () => {
-          window.addEventListener('mousemove', onMouseDrag);
-        });
-
-        window.addEventListener('mouseup', () => {
-          window.removeEventListener('mousemove', onMouseDrag);
-        });
+        onMouseDrag({ movementX, movementY }) {
+          const { left, top } = window.getComputedStyle(this);
+          let leftValue = parseInt(left);
+          let topValue = parseInt(top);
+          this.style.left = `${leftValue + movementX}px`;
+          this.style.top = `${topValue + movementY}px`;
+        }
       }
 
-      document.querySelectorAll('draggable-box').forEach((el) => makeDraggable(el));
+      customElements.define('draggable-box', DraggableBox);
     </script>
   </body>
 </html>

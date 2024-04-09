@@ -1,15 +1,32 @@
 {
   "name": "perfect-arrow",
-  "private": true,
-  "version": "0.0.0",
+  "description": "Perfect, declarative arrows. ⤵",
+  "version": "0.0.1",
   "type": "module",
+  "author": "Christopher Shank",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "keywords": [
+    "arrow",
+    "perfect-arrows",
+    "custom element"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "vite demo",
+    "build": "tsc --build --pretty"
   },
   "devDependencies": {
-    "@types/node": "^20.12.5",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },
