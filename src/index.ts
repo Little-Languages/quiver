@@ -59,7 +59,9 @@ export class PerfectArrow extends ReactiveElement {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.#sourceCleanup?.();
+    this.#sourceCleanup = null;
     this.#targetCleanup?.();
+    this.#targetCleanup = null;
   }
 
   observerSource() {
@@ -76,6 +78,7 @@ export class PerfectArrow extends ReactiveElement {
   }
 
   observerTarget() {
+    this.#targetCleanup?.();
     const el = document.getElementById(this.target);
 
     if (!el) {
@@ -116,11 +119,11 @@ export class PerfectArrow extends ReactiveElement {
     super.update(changedProperties);
 
     if (changedProperties.has('source')) {
-      this.observerSource();
+      this.#sourceCleanup = this.observerSource();
     }
 
     if (changedProperties.has('target')) {
-      this.observerTarget();
+      this.#targetCleanup = this.observerTarget();
     }
 
     const options: ArrowOptions = {
