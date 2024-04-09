@@ -58,7 +58,7 @@ export class PerfectArrow extends ReactiveElement {
 
   observerSource() {
     this.unobserveSource();
-    const el = document.getElementById(this.source);
+    const el = document.querySelector(this.source);
 
     if (!el) {
       throw new Error('source is not a valid element');
@@ -76,7 +76,7 @@ export class PerfectArrow extends ReactiveElement {
 
   observerTarget() {
     this.unobserveTarget();
-    const el = document.getElementById(this.target);
+    const el = document.querySelector(this.target);
 
     if (!el) {
       throw new Error('source is not a valid element');
