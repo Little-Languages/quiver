@@ -6,14 +6,23 @@ import vizObserver, { Rect } from 'viz-observer';
 export type ArrowType = 'point' | 'box';
 
 export type Arrow = [
+  /** The x position of the (padded) starting point. */
   sx: number,
+  /** The y position of the (padded) starting point. */
   sy: number,
+  /** The x position of the center point. */
   cx: number,
+  /** The y position of the center point. */
   cy: number,
+  /** The x position of the (padded) ending point. */
   ex: number,
+  /** The y position of the (padded) ending point. */
   ey: number,
+  /** The angle (in radians) for an ending arrowhead. */
   ae: number,
+  /** The angle (in radians) for a starting arrowhead. */
   as: number,
+  /** The angle (in radians) for a center arrowhead. */
   ec: number
 ];
 
@@ -24,31 +33,42 @@ export class PerfectArrow extends ReactiveElement {
     customElements.define(this.tagName, this);
   }
 
+  /** The type of layout algorithm to use: 'box' or 'point'. */
   @property({ type: String }) type: ArrowType = 'box';
 
-  @property({ type: String }) source: string = '';
+  /** A CSS selector for the source of the arrow. */
+  @property({ type: String, reflect: true }) source: string = '';
   private sourceCleanup: (() => void) | null = null;
   private sourceRect!: Rect;
 
-  @property({ type: String }) target: string = '';
+  /** A CSS selector for the target of the arrow. */
+  @property({ type: String, reflect: true }) target: string = '';
   private targetCleanup: (() => void) | null = null;
   private targetRect!: Rect;
 
-  @property({ type: Number }) bow: number = 0;
+  /** A value representing the natural bow of the arrow. At `0`, all lines will be straight. */
+  @property({ type: Number, reflect: true }) bow: number = 0;
 
-  @property({ type: Number }) stretch: number = 0.25;
+  /** The effect that the arrow's length will have, relative to its `minStretch` and `maxStretch`, on the bow of the arrow. At `0`, the stretch will have no effect. */
+  @property({ type: Number, reflect: true }) stretch: number = 0.25;
 
-  @property({ type: Number, attribute: 'stretch-min' }) stretchMin: number = 50;
+  /** The length of the arrow where the line should be most stretched. Shorter distances than this will have no additional effect on the bow of the arrow. */
+  @property({ type: Number, attribute: 'stretch-min', reflect: true }) stretchMin: number = 50;
 
-  @property({ type: Number, attribute: 'stretch-max' }) stretchMax: number = 420;
+  /** The length of the arrow at which the stretch should have no effect. */
+  @property({ type: Number, attribute: 'stretch-max', reflect: true }) stretchMax: number = 420;
 
-  @property({ type: Number, attribute: 'pad-start' }) padStart: number = 0;
+  /** How far the arrow's starting point should be from the provided start point. */
+  @property({ type: Number, attribute: 'pad-start', reflect: true }) padStart: number = 0;
 
-  @property({ type: Number, attribute: 'pad-end' }) padEnd: number = 20;
+  /** How far the arrow's ending point should be from the provided end point. */
+  @property({ type: Number, attribute: 'pad-end', reflect: true }) padEnd: number = 20;
 
-  @property({ type: Boolean }) flip: boolean = false;
+  /** Whether to reflect the arrow's bow angle. */
+  @property({ type: Boolean, reflect: true }) flip: boolean = false;
 
-  @property({ type: Boolean }) straights: boolean = true;
+  /** Whether to use straight lines at 45 degree angles. */
+  @property({ type: Boolean, reflect: true }) straights: boolean = true;
 
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -120,6 +140,10 @@ export class PerfectArrow extends ReactiveElement {
   update(changedProperties: PropertyValues) {
     super.update(changedProperties);
 
+    if (!this.source || !this.target) {
+      return;
+    }
+
     if (changedProperties.has('source')) {
       this.sourceCleanup = this.observerSource();
     }
@@ -147,6 +171,7 @@ export class PerfectArrow extends ReactiveElement {
   render([sx, sy, cx, cy, ex, ey, ae]: Arrow) {
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
+    // FIX: Doesn't rerender when it has display none
     const { width, height } = this.getBoundingClientRect();
 
     if (!this.shadowRoot) return;

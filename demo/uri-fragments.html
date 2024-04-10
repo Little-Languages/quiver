@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Arrow</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+      }
+
+      #world {
+        width: fit-content;
+      }
+
+      a[href^='#']:hover {
+        color: red;
+      }
+
+      body:has(a[href^='#']:hover) perfect-arrow {
+        opacity: 1;
+      }
+
+      perfect-arrow {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+      }
+    </style>
+  </head>
+  <body>
+    <p>Hello <a href="#world">World</a></p>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+      voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+      non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+    <h2 id="world">World</h2>
+    <p>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+      labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+      laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+      voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+      non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+    </p>
+    <script type="module">
+      import { PerfectArrow } from '../src/index.ts';
+
+      PerfectArrow.register();
+
+      const uriFragments = document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        const id = anchor.getAttribute('href') || '';
+        const el = document.querySelector(id);
+        const arrow = new PerfectArrow();
+        arrow.source = `a[href="${id}"]`; // handle duplicate references
+        arrow.target = id;
+        arrow.padStart = 5;
+        document.body.append(arrow);
+      });
+    </script>
+  </body>
+</html>
