@@ -7,7 +7,7 @@
 
 ## Usage
 
-1. Install the NPM package [`perfect-arrow`](#) using a package manager of your choice.
+1. Install the NPM package [`perfect-arrow`](https://www.npmjs.com/package/perfect-arrow) using a package manager of your choice.
 
 2. Register the custom element and start using it in HTML
 
