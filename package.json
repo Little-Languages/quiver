@@ -3,8 +3,16 @@
   "description": "Perfect, declarative arrows. ⤵",
   "version": "0.0.1",
   "type": "module",
-  "author": "Christopher Shank",
+  "author": "Christopher Shank <chris.shank.23@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ChrisShank/perfect-arrow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ChrisShank/perfect-arrow/issues"
+  },
+  "homepage": "https://github.com/ChrisShank/perfect-arrow#readme",
   "source": "src/index.ts",
   "module": "./dist/index.js",
   "exports": {
