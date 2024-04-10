@@ -63,3 +63,21 @@ Here are the default values of optional attributes
 ### Extensibility
 
 The custom element is easily extensible via class inheritance. You can update the name of the custom element, add new properties/attributes, override the render method, and add new arrow algorithms.
+
+```ts
+import { PerfectArrow } from 'perfect-arrow';
+import { property } from '@lit/reactive-element/decorators.js';
+
+class MyArrow extends PerfectArrow {
+  // Override the name of the custom element
+  static tagName = 'my-arrow';
+
+  // Add your own properties/attributes. For example, a weighted edge.
+  @property({ type: Number, reflect: true }) weight: number = 0;
+
+  // Render an arrow with your own styles!
+  render([sx, sy, cx, cy, ex, ey, ae]: Arrow) {}
+}
+
+MyArrow.register();
+```

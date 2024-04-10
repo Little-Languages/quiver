@@ -168,7 +168,7 @@ export class PerfectArrow extends ReactiveElement {
     this.render(arrow);
   }
 
-  render([sx, sy, cx, cy, ex, ey, ae]: Arrow) {
+  render([sx, sy, cx, cy, ex, ey, ae]: Arrow): void {
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
     // FIX: Doesn't rerender when it has display none

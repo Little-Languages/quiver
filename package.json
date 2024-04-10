@@ -1,7 +1,7 @@
 {
   "name": "perfect-arrow",
   "description": "Perfect, declarative arrows. ⤵",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "author": "Christopher Shank <chris.shank.23@gmail.com>",
   "license": "MIT",
@@ -32,7 +32,8 @@
   ],
   "scripts": {
     "dev": "vite demo",
-    "build": "tsc --build --pretty"
+    "build": "tsc --build --pretty",
+    "publish": "pnpm build && npm publish"
   },
   "devDependencies": {
     "typescript": "^5.2.2",
