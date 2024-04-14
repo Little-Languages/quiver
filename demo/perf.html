@@ -16,9 +16,9 @@
 
       draggable-box {
         display: block;
-        width: 50px;
-        height: 50px;
-        border: 2px solid black;
+        width: 20px;
+        height: 20px;
+        border: 3px solid black;
         position: absolute;
       }
 
@@ -41,12 +41,6 @@
     </style>
   </head>
   <body>
-    <draggable-box id="box1"></draggable-box>
-    <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
-    <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
-
-    <perfect-arrow source="#box1" target="#box2"></perfect-arrow>
-
     <script type="module">
       import { PerfectArrow } from '../src/index.ts';
 
@@ -77,6 +71,25 @@
       }
 
       customElements.define('draggable-box', DraggableBox);
+
+      const random = (max) => Math.floor(Math.random() * max);
+
+      document.body.append(
+        ...Array.from({ length: 50 }).map((_, i) => {
+          const box = new DraggableBox();
+          box.id = `box${i}`;
+          box.style.left = `${random(700)}px`;
+          box.style.top = `${random(400)}px`;
+          return box;
+        }),
+        ...Array.from({ length: 250 }).map((_, i) => {
+          const arrow = new PerfectArrow();
+          arrow.source = `#box${random(50)}`;
+          arrow.target = `#box${random(50)}`;
+          // arrow.type = 'point';
+          return arrow;
+        })
+      );
     </script>
   </body>
 </html>

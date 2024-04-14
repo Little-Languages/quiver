@@ -32,7 +32,7 @@
   ],
   "scripts": {
     "dev": "vite demo",
-    "build": "tsc --build --pretty",
+    "build": "tsc --build",
     "publish": "pnpm build && npm publish"
   },
   "devDependencies": {

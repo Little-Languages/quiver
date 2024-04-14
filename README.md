@@ -60,6 +60,8 @@ Here are the default values of optional attributes
 ></perfect-arrow>
 ```
 
+Check out this [demo](https://perfect-arrows.vercel.app/) to play around with the different settings.
+
 ### Extensibility
 
 The custom element is easily extensible via class inheritance. You can update the name of the custom element, add new properties/attributes, override the render method, and add new arrow algorithms.
@@ -76,7 +78,9 @@ class MyArrow extends PerfectArrow {
   @property({ type: Number, reflect: true }) weight: number = 0;
 
   // Render an arrow with your own styles!
-  render([sx, sy, cx, cy, ex, ey, ae]: Arrow) {}
+  render([sx, sy, cx, cy, ex, ey, ae]: Arrow) {
+    // ...
+  }
 }
 
 MyArrow.register();
