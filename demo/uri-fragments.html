@@ -60,9 +60,8 @@
 
       PerfectArrow.register();
 
-      const uriFragments = document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
         const id = anchor.getAttribute('href') || '';
-        const el = document.querySelector(id);
         const arrow = new PerfectArrow();
         arrow.source = `a[href="${id}"]`; // handle duplicate references
         arrow.target = id;
