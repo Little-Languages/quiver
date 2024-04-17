@@ -3,7 +3,7 @@
 > A custom element to declaratively define arrows between HTML elements. Steve Ruiz's [perfect-arrows](https://github.com/steveruizok/perfect-arrows) powers to arrow layout and Sam Thor's [viz-observer](https://github.com/samthor/viz-observer) to observer the movement and resizing of elements.
 
 > [!WARNING]  
-> This library is still in development. 🚧 Use at your own risk. It's also not published to NPM yet.
+> This library is still in development. 🚧 Use at your own risk. It's published to npm, but expect breaking changes until we flesh things out.
 
 ## Usage
 
