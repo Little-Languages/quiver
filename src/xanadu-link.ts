@@ -1,9 +1,10 @@
 import { AbstractArrow, Rect } from './abstract-arrow.js';
 
-export class XanaduArrow extends AbstractArrow {
-  static tagName = 'xanadu-arrow';
+export class XanaduLink extends AbstractArrow {
+  static tagName = 'xanadu-link';
 
   connectionEl = document.createElement('div');
+
   bg = 'rgba(185, 233, 219, 0.75)';
 
   protected createRenderRoot() {
