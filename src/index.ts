@@ -47,28 +47,28 @@ export class PerfectArrow extends ReactiveElement {
   private targetRect!: Rect;
 
   /** A value representing the natural bow of the arrow. At `0`, all lines will be straight. */
-  @property({ type: Number, reflect: true }) bow: number = 0;
+  @property({ type: Number }) bow: number = 0;
 
   /** The effect that the arrow's length will have, relative to its `minStretch` and `maxStretch`, on the bow of the arrow. At `0`, the stretch will have no effect. */
-  @property({ type: Number, reflect: true }) stretch: number = 0.25;
+  @property({ type: Number }) stretch: number = 0.25;
 
   /** The length of the arrow where the line should be most stretched. Shorter distances than this will have no additional effect on the bow of the arrow. */
-  @property({ type: Number, attribute: 'stretch-min', reflect: true }) stretchMin: number = 50;
+  @property({ type: Number, attribute: 'stretch-min' }) stretchMin: number = 50;
 
   /** The length of the arrow at which the stretch should have no effect. */
-  @property({ type: Number, attribute: 'stretch-max', reflect: true }) stretchMax: number = 420;
+  @property({ type: Number, attribute: 'stretch-max' }) stretchMax: number = 420;
 
   /** How far the arrow's starting point should be from the provided start point. */
-  @property({ type: Number, attribute: 'pad-start', reflect: true }) padStart: number = 0;
+  @property({ type: Number, attribute: 'pad-start' }) padStart: number = 0;
 
   /** How far the arrow's ending point should be from the provided end point. */
-  @property({ type: Number, attribute: 'pad-end', reflect: true }) padEnd: number = 20;
+  @property({ type: Number, attribute: 'pad-end' }) padEnd: number = 20;
 
   /** Whether to reflect the arrow's bow angle. */
-  @property({ type: Boolean, reflect: true }) flip: boolean = false;
+  @property({ type: Boolean }) flip: boolean = false;
 
   /** Whether to use straight lines at 45 degree angles. */
-  @property({ type: Boolean, reflect: true }) straights: boolean = true;
+  @property({ type: Boolean }) straights: boolean = true;
 
   disconnectedCallback() {
     super.disconnectedCallback();

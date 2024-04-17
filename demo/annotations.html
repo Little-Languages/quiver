@@ -3,13 +3,14 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Perfect Arrow</title>
+    <title>Perfect Arrow - Annotations</title>
     <style>
       html {
         height: 100%;
       }
 
       body {
+        /* needed since our arrows are absolutely positioned. */
         position: relative;
         height: 100%;
         overflow: hidden;
@@ -50,7 +51,7 @@
         right: 0;
         bottom: 0;
         left: 0;
-        z-index: -1;
+        pointer-events: none;
       }
     </style>
   </head>
@@ -136,7 +137,7 @@
         const arrow = new PerfectArrow();
         arrow.source = `[annotation-source="${id}"]`;
         arrow.target = `[annotation="${id}"]`;
-        arrow.padStart = 5;
+        arrow.padStart = 10;
         document.body.append(arrow);
       });
     </script>
