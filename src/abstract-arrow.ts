@@ -14,11 +14,13 @@ export class AbstractArrow extends ReactiveElement {
   /** A CSS selector for the source of the arrow. */
   @property({ type: String, reflect: true }) source: string = '';
   #sourceCleanup: (() => void) | null = null;
+  #sourceElement: Element | null = null;
   #sourceRect!: Rect;
 
   /** A CSS selector for the target of the arrow. */
   @property({ type: String, reflect: true }) target: string = '';
   #targetCleanup: (() => void) | null = null;
+  #targetElement: Element | null = null;
   #targetRect!: Rect;
 
   disconnectedCallback() {
@@ -29,12 +31,12 @@ export class AbstractArrow extends ReactiveElement {
 
   #observerSource() {
     this.#unobserveSource();
-    const el = document.querySelector(this.source);
+    this.#sourceElement = document.querySelector(this.source);
 
-    if (!el) {
+    if (!this.#sourceElement) {
       throw new Error('source is not a valid element');
     }
-    return vizObserver(el, (rect) => {
+    return vizObserver(this.#sourceElement, (rect) => {
       this.#sourceRect = rect;
       this.requestUpdate();
     });
@@ -47,12 +49,12 @@ export class AbstractArrow extends ReactiveElement {
 
   #observerTarget() {
     this.#unobserveTarget();
-    const el = document.querySelector(this.target);
+    this.#targetElement = document.querySelector(this.target);
 
-    if (!el) {
+    if (!this.#targetElement) {
       throw new Error('source is not a valid element');
     }
-    return vizObserver(el, (rect) => {
+    return vizObserver(this.#targetElement, (rect) => {
       this.#targetRect = rect;
       this.requestUpdate();
     });
@@ -78,9 +80,9 @@ export class AbstractArrow extends ReactiveElement {
       this.#targetCleanup = this.#observerTarget();
     }
 
-    this.render(this.#sourceRect, this.#targetRect);
+    this.render(this.#sourceRect, this.#targetRect, this.#sourceElement!, this.#targetElement!);
   }
 
   // @ts-ignore
-  render(sourceRect: Rect, targetRect: Rect) {}
+  render(sourceRect: Rect, targetRect: Rect, sourceElement: Element, targetElement: Element) {}
 }

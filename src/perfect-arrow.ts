@@ -1,6 +1,6 @@
+import { AbstractArrow, Rect } from './abstract-arrow.js';
 import { property } from '@lit/reactive-element/decorators.js';
 import { getArrow, getBoxToBoxArrow, ArrowOptions } from 'perfect-arrows';
-import { AbstractArrow, Rect } from './abstract-arrow.js';
 
 export type ArrowType = 'point' | 'box';
 

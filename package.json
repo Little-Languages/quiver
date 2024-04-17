@@ -33,6 +33,7 @@
   "scripts": {
     "dev": "vite demo",
     "build": "tsc --build",
+    "build:demo": "vite build demo",
     "publish": "pnpm build && npm publish"
   },
   "devDependencies": {
