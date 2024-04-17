@@ -5,13 +5,11 @@ export class XanaduLink extends AbstractArrow {
 
   connectionEl = document.createElement('div');
 
-  bg = 'rgba(185, 233, 219, 0.75)';
-
   protected createRenderRoot() {
     const root = super.createRenderRoot();
 
     this.connectionEl.style.position = 'absolute';
-    this.connectionEl.style.backgroundColor = this.bg;
+    this.connectionEl.style.backgroundColor = 'var(--xanadu-bg, rgba(185, 233, 219, 0.75))';
 
     root.append(this.connectionEl);
     return root;
@@ -20,8 +18,12 @@ export class XanaduLink extends AbstractArrow {
   render(sourceRect: Rect, targetRect: Rect, sourceElement: Element, targetElement: Element): void {
     if (!(sourceElement instanceof HTMLElement) || !(targetElement instanceof HTMLElement)) return;
 
-    // TODO: if the target or source change then we don't undo this 😬
-    sourceElement.style.backgroundColor = targetElement.style.backgroundColor = this.bg;
+    // If the right side of the target is to the left of the right side of the source then swap them
+    if (sourceRect.x + sourceRect.width > targetRect.x + targetRect.width) {
+      const temp = sourceRect;
+      sourceRect = targetRect;
+      targetRect = temp;
+    }
 
     const top = Math.min(sourceRect.y, targetRect.y);
     const left = sourceRect.x + sourceRect.width;
@@ -35,6 +37,7 @@ export class XanaduLink extends AbstractArrow {
     this.connectionEl.style.left = `${left}px`;
     this.connectionEl.style.width = `${width}px`;
     this.connectionEl.style.height = `${height}px`;
+
     if (height === 0) {
       this.connectionEl.style.clipPath = '';
     } else {

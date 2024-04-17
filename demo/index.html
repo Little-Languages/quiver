@@ -3,42 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Perfect Arrow - Xanadu</title>
+    <title>Perfect Arrow - Dragging</title>
     <style>
       html {
         height: 100%;
       }
 
       body {
-        margin: 0;
         min-height: 100%;
         position: relative;
       }
 
-      draggable-document {
-        display: flex;
-        flex-direction: column;
+      draggable-box {
+        display: block;
+        width: 50px;
+        height: 50px;
         border: 2px solid black;
-        border-radius: 1rem;
-        width: 400px;
-        height: 500px;
         position: absolute;
-        overflow: hidden;
-
-        h2 {
-          background: gainsboro;
-          margin: 0;
-          padding: 0.5rem 1rem;
-        }
-
-        article {
-          padding: 0 1rem;
-          overflow: auto;
-          flex: 1;
-        }
       }
 
-      xanadu-arrow {
+      perfect-arrow {
         display: block;
         position: absolute;
         top: 0;
@@ -50,127 +34,18 @@
     </style>
   </head>
   <body>
-    <draggable-document data-id="1" style="left: 20px; top: 200px">
-      <h2>Note 1</h2>
+    <draggable-box id="box1"></draggable-box>
+    <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
+    <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
 
-      <article>
-        <p>
-          <span link="1"
-            >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.
-          </span>
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-      </article>
-    </draggable-document>
-
-    <draggable-document data-id="2" style="left: 500px; top: 100px">
-      <h2>Note 2</h2>
-
-      <article>
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          <span link="1"
-            >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-            dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-            mollit anim id est laborum.</span
-          >
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-      </article>
-    </draggable-document>
-
-    <xanadu-arrow
-      source="draggable-document[data-id='1'] [link='1']"
-      target="draggable-document[data-id='2'] [link='1']"
-    ></xanadu-arrow>
+    <perfect-arrow source="#box1" target="#box2"></perfect-arrow>
 
     <script type="module">
-      import { XanaduArrow } from '../src/xanadu-arrow.ts';
+      import { PerfectArrow } from '../src/perfect-arrow.ts';
 
-      XanaduArrow.register();
+      PerfectArrow.register();
 
-      class DraggableDocument extends HTMLElement {
-        static register() {
-          customElements.define('draggable-document', this);
-        }
-
+      class DraggableBox extends HTMLElement {
         constructor() {
           super();
 
@@ -194,7 +69,7 @@
         }
       }
 
-      DraggableDocument.register();
+      customElements.define('draggable-box', DraggableBox);
     </script>
   </body>
 </html>

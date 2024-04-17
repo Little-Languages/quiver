@@ -13,6 +13,7 @@
         margin: 0;
         min-height: 100%;
         position: relative;
+        --xanadu-bg: rgba(185, 233, 219, 0.75);
       }
 
       draggable-document {
@@ -21,9 +22,11 @@
         border: 2px solid black;
         border-radius: 1rem;
         width: 400px;
-        height: 700px;
+        height: 600px;
         position: absolute;
         overflow: hidden;
+        text-align: justify;
+        user-select: none;
 
         h2 {
           background: gainsboro;
@@ -35,10 +38,14 @@
           padding: 0 1rem;
           overflow: auto;
           flex: 1;
+
+          [link] {
+            background-color: var(--xanadu-bg);
+          }
         }
       }
 
-      xanadu-arrow {
+      xanadu-link {
         display: block;
         position: absolute;
         top: 0;
