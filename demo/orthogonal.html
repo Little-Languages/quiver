@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Arrow - Dragging</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        position: relative;
+        margin: 0;
+      }
+
+      draggable-box {
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 4px solid black;
+        position: absolute;
+      }
+
+      orthogonal-edge {
+        display: block;
+        position: absolute;
+        pointer-events: none;
+        border: 2px solid gray;
+        box-sizing: border-box;
+      }
+    </style>
+  </head>
+  <body>
+    <draggable-box id="box1" style="left: 0; top: 0"></draggable-box>
+    <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
+
+    <orthogonal-edge source="#box1" target="#box2"></orthogonal-edge>
+
+    <script type="module">
+      import { OrthogonalEdge } from '../src/orthogonal-edge.ts';
+
+      OrthogonalEdge.register();
+
+      class DraggableBox extends HTMLElement {
+        constructor() {
+          super();
+
+          this.onMouseDrag = this.onMouseDrag.bind(this);
+
+          this.addEventListener('mousedown', () => {
+            window.addEventListener('mousemove', this.onMouseDrag);
+          });
+
+          window.addEventListener('mouseup', () => {
+            window.removeEventListener('mousemove', this.onMouseDrag);
+          });
+        }
+
+        onMouseDrag({ movementX, movementY }) {
+          const { left, top } = window.getComputedStyle(this);
+          let leftValue = parseInt(left);
+          let topValue = parseInt(top);
+          this.style.left = `${leftValue + movementX}px`;
+          this.style.top = `${topValue + movementY}px`;
+        }
+      }
+
+      customElements.define('draggable-box', DraggableBox);
+    </script>
+  </body>
+</html>
