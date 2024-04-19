@@ -29,5 +29,13 @@ export class OrthogonalEdge extends AbstractArrow {
     this.style.top = `${y}px`;
     this.style.width = `${w}px`;
     this.style.height = `${h}px`;
+
+    if (sourceRect.y + sourceRect.height < targetRect.y) {
+      this.style.borderTop = '';
+      this.style.borderBottom = '2px dashed grey';
+    } else if (sourceRect.y > targetRect.y + targetRect.height) {
+      this.style.borderTop = '2px dashed grey';
+      this.style.borderBottom = '';
+    }
   }
 }
