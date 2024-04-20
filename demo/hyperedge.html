@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HypeGraph</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        position: relative;
+        margin: 0;
+      }
+
+      draggable-box {
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        position: absolute;
+      }
+
+      hyper-arrow {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <draggable-box id="box1" style="left: 0; top: 0"></draggable-box>
+    <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
+    <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
+
+    <hyper-arrow sources="#box1" targets="#box2, #box3"></hyper-arrow>
+
+    <script type="module">
+      import { AbstractHyperArrow } from '../src/abstract-hyper-arrow.ts';
+      import { DraggableBox } from './draggable-box';
+
+      DraggableBox.register();
+      AbstractHyperArrow.register();
+    </script>
+  </body>
+</html>
