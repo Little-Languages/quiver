@@ -41,34 +41,10 @@
 
     <script type="module">
       import { OrthogonalEdge } from '../src/orthogonal-edge.ts';
+      import { DraggableBox } from './draggable-box';
 
+      DraggableBox.register();
       OrthogonalEdge.register();
-
-      class DraggableBox extends HTMLElement {
-        constructor() {
-          super();
-
-          this.onMouseDrag = this.onMouseDrag.bind(this);
-
-          this.addEventListener('mousedown', () => {
-            window.addEventListener('mousemove', this.onMouseDrag);
-          });
-
-          window.addEventListener('mouseup', () => {
-            window.removeEventListener('mousemove', this.onMouseDrag);
-          });
-        }
-
-        onMouseDrag({ movementX, movementY }) {
-          const { left, top } = window.getComputedStyle(this);
-          let leftValue = parseInt(left);
-          let topValue = parseInt(top);
-          this.style.left = `${leftValue + movementX}px`;
-          this.style.top = `${topValue + movementY}px`;
-        }
-      }
-
-      customElements.define('draggable-box', DraggableBox);
     </script>
   </body>
 </html>

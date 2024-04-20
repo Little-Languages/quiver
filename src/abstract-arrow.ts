@@ -47,12 +47,12 @@ export class AbstractArrow extends ReactiveElement {
     this.#sourceCleanup = null;
   }
 
-  #observerTarget() {
+  #observeTarget() {
     this.#unobserveTarget();
     this.#targetElement = document.querySelector(this.target);
 
     if (!this.#targetElement) {
-      throw new Error('source is not a valid element');
+      throw new Error('target is not a valid element');
     }
     return vizObserver(this.#targetElement, (rect) => {
       this.#targetRect = rect;
@@ -77,7 +77,7 @@ export class AbstractArrow extends ReactiveElement {
     }
 
     if (changedProperties.has('target')) {
-      this.#targetCleanup = this.#observerTarget();
+      this.#targetCleanup = this.#observeTarget();
     }
 
     this.render(this.#sourceRect, this.#targetRect, this.#sourceElement!, this.#targetElement!);

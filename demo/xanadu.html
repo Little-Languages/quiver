@@ -179,38 +179,13 @@
 
     <script type="module">
       import { XanaduLink } from '../src/xanadu-link.ts';
+      import { DraggableBox } from './draggable-box';
 
-      XanaduLink.register();
-
-      class DraggableDocument extends HTMLElement {
-        static register() {
-          customElements.define('draggable-document', this);
-        }
-
-        constructor() {
-          super();
-
-          this.onMouseDrag = this.onMouseDrag.bind(this);
-
-          this.addEventListener('mousedown', () => {
-            window.addEventListener('mousemove', this.onMouseDrag);
-          });
-
-          window.addEventListener('mouseup', () => {
-            window.removeEventListener('mousemove', this.onMouseDrag);
-          });
-        }
-
-        onMouseDrag({ movementX, movementY }) {
-          const { left, top } = window.getComputedStyle(this);
-          let leftValue = parseInt(left);
-          let topValue = parseInt(top);
-          this.style.left = `${leftValue + movementX}px`;
-          this.style.top = `${topValue + movementY}px`;
-        }
+      class DraggableDocument extends DraggableBox {
+        static tagName = 'draggable-document';
       }
-
       DraggableDocument.register();
+      XanaduLink.register();
     </script>
   </body>
 </html>
