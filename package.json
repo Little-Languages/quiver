@@ -1,23 +1,23 @@
 {
-  "name": "perfect-arrow",
-  "description": "Perfect, declarative arrows. ⤵",
-  "version": "0.0.2",
+  "name": "@little-languages/quiver",
+  "description": "Your quiver of declarative arrows for the web. ⤵",
+  "version": "0.1.0",
   "type": "module",
+  "sideEffects": false,
   "author": "Christopher Shank <chris.shank.23@gmail.com>",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ChrisShank/perfect-arrow.git"
+    "url": "git+https://github.com/Little-Languages/quiver.git"
   },
   "bugs": {
-    "url": "https://github.com/ChrisShank/perfect-arrow/issues"
+    "url": "https://github.com/Little-Languages/quiver/issues"
   },
-  "homepage": "https://github.com/ChrisShank/perfect-arrow#readme",
-  "source": "src/index.ts",
-  "module": "./dist/index.js",
+  "homepage": "https://github.com/Little-Languages/quiver#readme",
   "exports": {
-    ".": {
-      "import": "./dist/index.js"
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "import": "./dist/*.js"
     }
   },
   "types": "dist/index.d.ts",
@@ -26,8 +26,12 @@
     "src"
   ],
   "keywords": [
+    "quiver",
     "arrow",
     "perfect-arrows",
+    "orthogonal-edge",
+    "hyperedge",
+    "xanadu",
     "custom element"
   ],
   "scripts": {
@@ -37,6 +41,7 @@
     "publish": "pnpm build && npm publish"
   },
   "devDependencies": {
+    "@types/node": "^20.12.7",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"
   },
