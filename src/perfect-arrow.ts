@@ -1,4 +1,4 @@
-import { AbstractArrow, Rect } from './abstract-arrow.js';
+import { AbstractArrow } from './abstract-arrow.js';
 import { property } from '@lit/reactive-element/decorators.js';
 import { getArrow, getBoxToBoxArrow, ArrowOptions } from 'perfect-arrows';
 
@@ -55,7 +55,7 @@ export class PerfectArrow extends AbstractArrow {
   /** Whether to use straight lines at 45 degree angles. */
   @property({ type: Boolean }) straights: boolean = true;
 
-  getArrow(sourceBox: Rect, targetBox: Rect, options: ArrowOptions): Arrow {
+  getArrow(sourceBox: DOMRectReadOnly, targetBox: DOMRectReadOnly, options: ArrowOptions): Arrow {
     switch (this.type) {
       case 'point': {
         const sourceX = sourceBox.x + sourceBox.width / 2;
@@ -80,8 +80,8 @@ export class PerfectArrow extends AbstractArrow {
     }
   }
 
-  render(sourceRect: Rect, targetRect: Rect): void {
-    const options: ArrowOptions = {
+  render(sourceRect: DOMRectReadOnly, targetRect: DOMRectReadOnly): void {
+    let [sx, sy, cx, cy, ex, ey, ae] = this.getArrow(sourceRect, targetRect, {
       bow: this.bow,
       stretch: this.stretch,
       stretchMin: this.stretchMin,
@@ -90,9 +90,7 @@ export class PerfectArrow extends AbstractArrow {
       padEnd: this.padEnd,
       flip: this.flip,
       straights: this.straights,
-    };
-
-    const [sx, sy, cx, cy, ex, ey, ae] = this.getArrow(sourceRect, targetRect, options);
+    });
 
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
@@ -117,5 +115,28 @@ export class PerfectArrow extends AbstractArrow {
           transform="${`translate(${ex},${ey}) rotate(${endAngleAsDegrees})`}"
         />
       </svg>`;
+
+    //     const stroke = 4 / 2;
+    //     // const endAngleAsDegrees = ae * (180 / Math.PI);
+    //     const sourceSide = positionToSide(sx, sy, sourceRect);
+    //     const targetSide = positionToSide(ex, ey, targetRect);
+    //     const sourceAxis = sourceSide === 'left' || sourceSide === 'right' ? 'v' : 'h';
+    //     const sourceXAdjustment = sourceAxis === 'h' ? stroke : 0;
+    //     const sourceYAdjustment = sourceAxis === 'v' ? stroke : 0;
+    //     const targetAxis = targetSide === 'left' || targetSide === 'right' ? 'v' : 'h';
+    //     this.style.clipPath = `path(
+    // 'M ${sx - stroke},${sy - stroke} \
+    // Q ${cx - stroke},${cy - stroke} ${ex - stroke},${ey - stroke} \
+    // ${targetAxis} ${-stroke * 2} Z')`;
+
+    //     // \Q ${cx + stroke},${cy + stroke} ${sx + sourceXAdjustment},${sy + sourceYAdjustment} \
+    //     // ${sourceAxis} ${-stroke * 2}
   }
 }
+
+// function positionToSide(x: number, y: number, rect: DOMRectReadOnly) {
+//   if (y <= rect.y) return 'top';
+//   else if (x <= rect.x) return 'left';
+//   else if (y >= rect.y + rect.width) return 'bottom';
+//   return 'right';
+// }

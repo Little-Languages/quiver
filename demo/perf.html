@@ -38,6 +38,8 @@
         bottom: 0;
         left: 0;
         pointer-events: none;
+        z-index: -1;
+        /* background: black; */
       }
     </style>
   </head>
@@ -63,7 +65,6 @@
           const arrow = new PerfectArrow();
           arrow.source = `#box${random(50)}`;
           arrow.target = `#box${random(50)}`;
-          // arrow.type = 'point';
           return arrow;
         })
       );

@@ -1,4 +1,4 @@
-import { AbstractArrow, Rect } from './abstract-arrow.js';
+import { AbstractArrow } from './abstract-arrow.js';
 
 export class XanaduLink extends AbstractArrow {
   static tagName = 'xanadu-link';
@@ -15,7 +15,12 @@ export class XanaduLink extends AbstractArrow {
     return root;
   }
 
-  render(sourceRect: Rect, targetRect: Rect, sourceElement: Element, targetElement: Element): void {
+  render(
+    sourceRect: DOMRectReadOnly,
+    targetRect: DOMRectReadOnly,
+    sourceElement: Element,
+    targetElement: Element
+  ): void {
     if (!(sourceElement instanceof HTMLElement) || !(targetElement instanceof HTMLElement)) return;
 
     // If the right side of the target is to the left of the right side of the source then swap them

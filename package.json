@@ -43,6 +43,6 @@
   "dependencies": {
     "@lit/reactive-element": "^2.0.4",
     "perfect-arrows": "^0.3.7",
-    "viz-observer": "^1.0.0"
+    "viz-observer": "2.0.0-beta.0"
   }
 }

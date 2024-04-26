@@ -1,8 +1,7 @@
 import { ReactiveElement, PropertyValues } from '@lit/reactive-element';
 import { property } from '@lit/reactive-element/decorators.js';
-import vizObserver, { Rect } from 'viz-observer';
-
-export type { Rect };
+import { VisualObserverManager } from './visual-observer';
+import { VisualObserverEntry } from 'viz-observer';
 
 // Very WIP
 export class AbstractHyperArrow extends ReactiveElement {
@@ -12,17 +11,27 @@ export class AbstractHyperArrow extends ReactiveElement {
     customElements.define(this.tagName, this);
   }
 
+  static visualObserver = new VisualObserverManager();
+
+  #visualObserver = (this.constructor as typeof AbstractHyperArrow).visualObserver;
+
   /** A CSS selector for the source(s) of the arrow. */
   @property({ type: String, reflect: true }) sources: string = '';
-  #sourcesCleanup = new Map<Element, () => void>();
-  #sourceElements!: NodeListOf<Element>;
-  #sourceRects = new Map<Element, Rect>();
+  #sourceElements: Element[] = [];
+  #sourceRects = new Map<Element, DOMRectReadOnly>();
+  #sourcesCallback = (entry: VisualObserverEntry) => {
+    this.#sourceRects.set(entry.target, entry.contentRect);
+    this.requestUpdate();
+  };
 
   /** A CSS selector for the target(s) of the arrow. */
   @property({ type: String, reflect: true }) targets: string = '';
-  #targetsCleanup = new Map<Element, () => void>();
-  #targetElements!: NodeListOf<Element>;
-  #targetRects = new Map<Element, Rect>();
+  #targetElements: Element[] = [];
+  #targetRects = new Map<Element, DOMRectReadOnly>();
+  #targetsCallback = (entry: VisualObserverEntry) => {
+    this.#targetRects.set(entry.target, entry.contentRect);
+    this.requestUpdate();
+  };
 
   disconnectedCallback() {
     super.disconnectedCallback();
@@ -32,75 +41,67 @@ export class AbstractHyperArrow extends ReactiveElement {
 
   #observerSources() {
     this.#unobserveSources();
-    this.#sourceElements = document.querySelectorAll(this.sources);
+    this.#sourceElements = Array.from(document.querySelectorAll(this.sources));
     this.#updateSources();
   }
 
   #updateSources() {
-    const trackedElements = new Set(this.#sourcesCleanup.keys());
+    if (this.#sourceElements.length === 0) return;
+
+    const elementsToUnObserve = new Set(this.#sourceElements);
 
     this.#sourceElements.forEach((el) => {
-      trackedElements.delete(el); // Delete any elements that are in the DOM.
+      elementsToUnObserve.delete(el); // Delete any elements that are in the DOM.
 
-      if (this.#sourcesCleanup.has(el)) return;
+      if (this.#sourceRects.has(el)) return;
 
-      this.#sourcesCleanup.set(
-        el,
-        vizObserver(el, (rect) => {
-          this.#sourceRects.set(el, rect);
-          this.requestUpdate();
-        })
-      );
+      this.#visualObserver.observe(el, this.#sourcesCallback);
     });
 
-    trackedElements.forEach((el) => {
-      this.#sourcesCleanup.get(el)?.();
-      this.#sourcesCleanup.delete(el);
+    elementsToUnObserve.forEach((el) => {
+      this.#visualObserver.unobserve(el, this.#sourcesCallback);
       this.#sourceRects.delete(el);
     });
   }
 
   #unobserveSources() {
-    this.#sourcesCleanup.forEach((cleanup) => cleanup());
-    this.#sourcesCleanup.clear();
+    for (const el of this.#sourceElements) {
+      this.#visualObserver.unobserve(el, this.#sourcesCallback);
+    }
     this.#sourceRects.clear();
   }
 
   #observeTargets() {
     this.#unobserveTargets();
 
-    this.#targetElements = document.querySelectorAll(this.targets);
+    this.#targetElements = Array.from(document.querySelectorAll(this.targets));
 
     this.#updateTargets();
   }
 
   #updateTargets() {
-    const trackedElements = new Set(this.#targetsCleanup.keys());
+    if (this.#targetElements.length === 0) return;
+
+    const elementsToUnObserve = new Set(this.#targetElements);
 
     this.#targetElements.forEach((el) => {
-      trackedElements.delete(el); // Delete any elements that are in the DOM.
+      elementsToUnObserve.delete(el); // Delete any elements that are in the DOM.
 
-      if (this.#targetsCleanup.has(el)) return;
+      if (this.#targetRects.has(el)) return;
 
-      this.#targetsCleanup.set(
-        el,
-        vizObserver(el, (rect) => {
-          this.#targetRects.set(el, rect);
-          this.requestUpdate();
-        })
-      );
+      this.#visualObserver.observe(el, this.#targetsCallback);
     });
 
-    trackedElements.forEach((el) => {
-      this.#targetsCleanup.get(el)?.();
-      this.#targetsCleanup.delete(el);
+    elementsToUnObserve.forEach((el) => {
+      this.#visualObserver.unobserve(el, this.#targetsCallback);
       this.#targetRects.delete(el);
     });
   }
 
   #unobserveTargets() {
-    this.#targetsCleanup.forEach((cleanup) => cleanup());
-    this.#targetsCleanup.clear();
+    for (const el of this.#targetElements) {
+      this.#visualObserver.unobserve(el, this.#targetsCallback);
+    }
     this.#targetRects.clear();
   }
 
@@ -123,20 +124,17 @@ export class AbstractHyperArrow extends ReactiveElement {
       this.#updateTargets();
     }
 
-    if (this.targets)
-      this.render(this.#sourceRects, this.#targetRects, this.#sourceElements, this.#targetElements);
+    if (this.#sourceRects.size === 0 || this.#targetRects.size === 0) return;
+
+    this.render(this.#sourceRects, this.#targetRects);
   }
 
   render(
     // @ts-ignore
-    sourceRects: ReadonlyMap<Element, Rect>,
+    sourceRects: ReadonlyMap<Element, DOMRectReadOnly>,
     // @ts-ignore
-    targetRects: ReadonlyMap<Element, Rect>,
-    // @ts-ignore
-    sourceElements: NodeListOf<Element>,
-    // @ts-ignore
-    targetElements: NodeListOf<Element>
+    targetRects: ReadonlyMap<Element, DOMRectReadOnly>
   ) {
-    console.log(sourceRects, targetRects, sourceElements, targetElements);
+    console.log(sourceRects, targetRects);
   }
 }
