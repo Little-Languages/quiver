@@ -22,7 +22,7 @@ export type Arrow = [
   /** The angle (in radians) for a starting arrowhead. */
   as: number,
   /** The angle (in radians) for a center arrowhead. */
-  ec: number
+  ac: number
 ];
 
 export class PerfectArrow extends AbstractArrow {
@@ -106,8 +106,10 @@ export class PerfectArrow extends AbstractArrow {
     return root;
   }
 
+  arrow: Arrow = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
   render(sourceRect: DOMRectReadOnly, targetRect: DOMRectReadOnly): void {
-    const [sx, sy, cx, cy, ex, ey, ae] = this.getArrow(sourceRect, targetRect, {
+    const [sx, sy, cx, cy, ex, ey, ae] = (this.arrow = this.getArrow(sourceRect, targetRect, {
       bow: this.bow,
       stretch: this.stretch,
       stretchMin: this.stretchMin,
@@ -116,7 +118,7 @@ export class PerfectArrow extends AbstractArrow {
       padEnd: this.padEnd,
       flip: this.flip,
       straights: this.straights,
-    });
+    }));
 
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
@@ -125,7 +127,6 @@ export class PerfectArrow extends AbstractArrow {
 
     const path = `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`;
     this.#path.setAttribute('d', path);
-    this.style.setProperty('--path', `"${path}"`);
 
     this.#polygon.setAttribute('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
