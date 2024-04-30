@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Perfect Arrow - Dragging</title>
+    <title>Perfect Arrow - Animated</title>
     <style>
       html {
         height: 100%;
@@ -33,12 +33,39 @@
         pointer-events: none;
         z-index: -1;
       }
+
+      perfect-arrow::after {
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: black;
+        offset-path: path(var(--path));
+        animation: move 1s ease-out infinite;
+      }
+
+      @keyframes move {
+        0%,
+        20% {
+          offset-distance: 0%;
+        }
+        80%,
+        100% {
+          offset-distance: 100%;
+        }
+      }
     </style>
   </head>
   <body>
     <draggable-box id="box1" style="left: 0; top: 0"></draggable-box>
     <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
-    <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
+    <!-- <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box> -->
 
     <perfect-arrow source="#box1" target="#box2"></perfect-arrow>
 

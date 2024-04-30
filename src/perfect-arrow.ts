@@ -123,31 +123,10 @@ export class PerfectArrow extends AbstractArrow {
     this.#circle.setAttribute('cx', sx.toString());
     this.#circle.setAttribute('cy', sy.toString());
 
-    this.#path.setAttribute('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+    const path = `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`;
+    this.#path.setAttribute('d', path);
+    this.style.setProperty('--path', `"${path}"`);
 
     this.#polygon.setAttribute('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
-
-    //     const stroke = 4 / 2;
-    //     // const endAngleAsDegrees = ae * (180 / Math.PI);
-    //     const sourceSide = positionToSide(sx, sy, sourceRect);
-    //     const targetSide = positionToSide(ex, ey, targetRect);
-    //     const sourceAxis = sourceSide === 'left' || sourceSide === 'right' ? 'v' : 'h';
-    //     const sourceXAdjustment = sourceAxis === 'h' ? stroke : 0;
-    //     const sourceYAdjustment = sourceAxis === 'v' ? stroke : 0;
-    //     const targetAxis = targetSide === 'left' || targetSide === 'right' ? 'v' : 'h';
-    //     this.style.clipPath = `path(
-    // 'M ${sx - stroke},${sy - stroke} \
-    // Q ${cx - stroke},${cy - stroke} ${ex - stroke},${ey - stroke} \
-    // ${targetAxis} ${-stroke * 2} Z')`;
-
-    //     // \Q ${cx + stroke},${cy + stroke} ${sx + sourceXAdjustment},${sy + sourceYAdjustment} \
-    //     // ${sourceAxis} ${-stroke * 2}
   }
 }
-
-// function positionToSide(x: number, y: number, rect: DOMRectReadOnly) {
-//   if (y <= rect.y) return 'top';
-//   else if (x <= rect.x) return 'left';
-//   else if (y >= rect.y + rect.width) return 'bottom';
-//   return 'right';
-// }
