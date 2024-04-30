@@ -35,9 +35,10 @@
     "custom element"
   ],
   "scripts": {
-    "dev": "vite demo",
     "build": "tsc --build",
-    "build:demo": "vite build demo",
+    "demo:dev": "vite demo",
+    "demo:build": "vite build demo",
+    "demo:preview": "pnpm demo:build && vite preview demo",
     "publish": "pnpm build && npm publish"
   },
   "devDependencies": {

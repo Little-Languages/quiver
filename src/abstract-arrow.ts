@@ -1,6 +1,6 @@
 import { ReactiveElement, PropertyValues } from '@lit/reactive-element';
 import { property } from '@lit/reactive-element/decorators.js';
-import { VisualObserverManager } from './visual-observer';
+import { VisualObserverManager } from './visual-observer.js';
 import { VisualObserverEntry } from 'viz-observer';
 
 export class AbstractArrow extends ReactiveElement {
@@ -56,7 +56,7 @@ export class AbstractArrow extends ReactiveElement {
   }
 
   #observeTarget() {
-    // this.#unobserveTarget();
+    this.#unobserveTarget();
     this.#targetElement = document.querySelector(this.target);
 
     if (!this.#targetElement) {

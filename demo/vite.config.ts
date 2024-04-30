@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   build: {
+    target: 'esnext',
     rollupOptions: {
       input: readdirSync(__dirname)
         .filter((file) => file.endsWith('.html'))

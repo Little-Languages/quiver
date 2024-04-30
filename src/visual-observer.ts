@@ -1,4 +1,4 @@
-import { VisualObserver, VisualObserverEntry } from 'viz-observer';
+import { VisualObserver, VisualObserverEntry } from './vo.js';
 
 type VisualObserverEntryCallback = (entry: VisualObserverEntry) => void;
 
@@ -21,6 +21,8 @@ export class VisualObserverManager {
     if (callbacks === undefined) {
       this.#vo.observe(target);
       this.#elementMap.set(target, (callbacks = new Set()));
+    } else {
+      callback({ target, contentRect: target.getBoundingClientRect(), isAppearing: true });
     }
 
     callbacks.add(callback);

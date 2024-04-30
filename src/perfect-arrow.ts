@@ -55,6 +55,11 @@ export class PerfectArrow extends AbstractArrow {
   /** Whether to use straight lines at 45 degree angles. */
   @property({ type: Boolean }) straights: boolean = true;
 
+  #svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  #circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+  #path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+  #polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+
   getArrow(sourceBox: DOMRectReadOnly, targetBox: DOMRectReadOnly, options: ArrowOptions): Arrow {
     switch (this.type) {
       case 'point': {
@@ -80,8 +85,29 @@ export class PerfectArrow extends AbstractArrow {
     }
   }
 
+  protected createRenderRoot(): HTMLElement | DocumentFragment {
+    const root = super.createRenderRoot();
+
+    this.#svg.setAttribute('stroke', '#000');
+    this.#svg.setAttribute('fill', '#000');
+    this.#svg.setAttribute('strokeWidth', '3');
+    this.#svg.style.height = '100%';
+    this.#svg.style.width = '100%';
+
+    this.#circle.setAttribute('r', '4');
+
+    this.#path.setAttribute('fill', 'none');
+
+    this.#polygon.setAttribute('points', '0,-6 12,0, 0,6');
+
+    this.#svg.append(this.#circle, this.#path, this.#polygon);
+    root.append(this.#svg);
+
+    return root;
+  }
+
   render(sourceRect: DOMRectReadOnly, targetRect: DOMRectReadOnly): void {
-    let [sx, sy, cx, cy, ex, ey, ae] = this.getArrow(sourceRect, targetRect, {
+    const [sx, sy, cx, cy, ex, ey, ae] = this.getArrow(sourceRect, targetRect, {
       bow: this.bow,
       stretch: this.stretch,
       stretchMin: this.stretchMin,
@@ -94,27 +120,12 @@ export class PerfectArrow extends AbstractArrow {
 
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
-    // FIX: Doesn't rerender when it has display none
-    const { width, height } = this.getBoundingClientRect();
+    this.#circle.setAttribute('cx', sx.toString());
+    this.#circle.setAttribute('cy', sy.toString());
 
-    if (!this.shadowRoot) return;
+    this.#path.setAttribute('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
 
-    // TODO: optimize lol
-    this.shadowRoot.innerHTML = `
-      <svg
-        viewBox="0 0 ${width} ${height}"
-        style=" width: ${width}px; height: ${height}px;"
-        stroke="#000"
-        fill="#000"
-        strokeWidth="3"
-      >
-        <circle cx="${sx}" cy="${sy}" r="4" />
-        <path d="${`M${sx},${sy} Q${cx},${cy} ${ex},${ey}`}" fill="none" />
-        <polygon
-          points="0,-6 12,0, 0,6"
-          transform="${`translate(${ex},${ey}) rotate(${endAngleAsDegrees})`}"
-        />
-      </svg>`;
+    this.#polygon.setAttribute('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
 
     //     const stroke = 4 / 2;
     //     // const endAngleAsDegrees = ae * (180 / Math.PI);
