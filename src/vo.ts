@@ -1,3 +1,5 @@
+// I accidentally introduced a bug in `viz-observer` 2.0.0-beta.0 so had to copy it over until we can patch a fix
+
 export interface VisualObserverEntry {
   target: Element;
   contentRect: DOMRectReadOnly;
