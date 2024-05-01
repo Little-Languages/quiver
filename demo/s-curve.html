@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>S-curve - Dragging</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        position: relative;
+        margin: 0;
+      }
+
+      draggable-node {
+        display: block;
+        position: relative;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        position: absolute;
+
+        &[type='input'] {
+          border: 2px solid black;
+          background-color: white;
+          clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        }
+
+        input-port,
+        output-port {
+          position: absolute;
+          background-color: white;
+          border: solid 2px #1e293b;
+          border-radius: 0.25rem;
+          height: 24px;
+          width: 12px;
+        }
+
+        output-port {
+        }
+      }
+
+      s-curve {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <draggable-node name="" style="left: 0; top: 0">
+      <input-port id="1"></input-port>
+      <output-port id="1"></output-port>
+    </draggable-node>
+    <draggable-node id="box2" style="left: 100px; top: 200px"></draggable-node>
+    <draggable-node id="box3" style="left: 200px; top: 100px"></draggable-node>
+
+    <s-curve source="#box1" target="#box2"></s-curve>
+
+    <script type="module">
+      import { SCurve } from '../src/s-curve.ts';
+      import { DraggableBox } from './draggable-node';
+
+      SCurve.register();
+
+      class DraggableNode extends DraggableBox {
+        static tagName = 'draggable-node';
+      }
+
+      DraggableNode.register();
+    </script>
+  </body>
+</html>

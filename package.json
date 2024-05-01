@@ -36,7 +36,7 @@
   ],
   "scripts": {
     "build": "tsc --build",
-    "demo:dev": "vite demo",
+    "dev": "vite demo",
     "demo:build": "vite build demo",
     "demo:preview": "pnpm demo:build && vite preview demo",
     "publish": "pnpm build && npm publish"
@@ -48,6 +48,7 @@
   },
   "dependencies": {
     "@lit/reactive-element": "^2.0.4",
+    "curved-arrows": "^0.1.0",
     "perfect-arrows": "^0.3.7",
     "viz-observer": "2.0.0-beta.0"
   }

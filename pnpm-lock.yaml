@@ -8,6 +8,9 @@ dependencies:
   '@lit/reactive-element':
     specifier: ^2.0.4
     version: 2.0.4
+  curved-arrows:
+    specifier: ^0.1.0
+    version: 0.1.0
   perfect-arrows:
     specifier: ^0.3.7
     version: 0.3.7
@@ -374,6 +377,11 @@ packages:
     dependencies:
       undici-types: 5.26.5
     dev: true
+
+  /curved-arrows@0.1.0:
+    resolution: {integrity: sha512-FchrDNr8b3ijJOycRM3iT0tc7d5NJSJ5e1fPZibTv73N2yXcgIbSi858R+QfCPRbrjqSWXnR8OaUUu9w+TxTRg==}
+    engines: {node: '>=10'}
+    dev: false
 
   /esbuild@0.20.2:
     resolution: {integrity: sha512-WdOOppmUNU+IbZ0PaDiTst80zjnrOkyJNHoKupIcVyU8Lvla3Ugx94VzkQ32Ijqd7UhHJy75gNWDMUekcrSJ6g==}
