@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>S-curve - Data-ports</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        position: relative;
+        margin: 0;
+      }
+
+      draggable-node {
+        display: block;
+        position: absolute;
+        width: 75px;
+        height: 50px;
+        border: 2px solid black;
+        padding: 5px;
+
+        input-port,
+        output-port {
+          position: absolute;
+          background-color: white;
+          border: solid 2px #1e293b;
+          border-radius: 0.25rem;
+          height: 24px;
+          width: 12px;
+        }
+
+        input-port {
+          left: 0;
+          transform: translateX(-50%);
+        }
+
+        output-port {
+          right: 0;
+          transform: translateX(50%);
+        }
+      }
+
+      s-curve {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: -1;
+      }
+    </style>
+  </head>
+  <body>
+    <draggable-node name="1" style="left: 20px; top: 100px">
+      <output-port name="1"></output-port>
+    </draggable-node>
+    <draggable-node name="2" style="left: 300px; top: 50px">
+      <input-port name="1"></input-port>
+    </draggable-node>
+    <draggable-node name="3" style="left: 300px; top: 150px">
+      <input-port name="1"></input-port>
+    </draggable-node>
+
+    <s-curve
+      source="draggable-node[name='1'] output-port[name='1']"
+      target="draggable-node[name='2'] input-port[name='1']"
+    ></s-curve>
+    <s-curve
+      source="draggable-node[name='1'] output-port[name='1']"
+      target="draggable-node[name='3'] input-port[name='1']"
+    ></s-curve>
+
+    <script type="module">
+      import { SCurve } from '../src/s-curve.ts';
+      import { DraggableBox } from './draggable-box.ts';
+
+      SCurve.register();
+
+      class DraggableNode extends DraggableBox {
+        static tagName = 'draggable-node';
+      }
+
+      DraggableNode.register();
+    </script>
+  </body>
+</html>

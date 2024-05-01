@@ -76,7 +76,7 @@ export class SCurve extends AbstractArrow {
 
     this.#svg.setAttribute('stroke', '#000');
     this.#svg.setAttribute('fill', '#000');
-    this.#svg.setAttribute('strokeWidth', '3');
+    this.#svg.setAttribute('stroke-width', '3');
     this.#svg.style.height = '100%';
     this.#svg.style.width = '100%';
 
@@ -86,7 +86,7 @@ export class SCurve extends AbstractArrow {
 
     this.#polygon.setAttribute('points', '0,-6 12,0, 0,6');
 
-    this.#svg.append(this.#circle, this.#path, this.#polygon);
+    this.#svg.append(this.#path, this.#polygon);
     root.append(this.#svg);
 
     return root;

@@ -90,7 +90,7 @@ export class PerfectArrow extends AbstractArrow {
 
     this.#svg.setAttribute('stroke', '#000');
     this.#svg.setAttribute('fill', '#000');
-    this.#svg.setAttribute('strokeWidth', '3');
+    this.#svg.setAttribute('stroke-width', '3');
     this.#svg.style.height = '100%';
     this.#svg.style.width = '100%';
 
