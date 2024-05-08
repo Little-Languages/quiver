@@ -57,7 +57,7 @@
     </style>
   </head>
   <body>
-    <draggable-document data-id="1" style="left: 20px; top: 200px">
+    <draggable-document name="1" style="left: 20px; top: 200px">
       <h2>Note 1</h2>
 
       <article>
@@ -130,7 +130,7 @@
       </article>
     </draggable-document>
 
-    <draggable-document data-id="2" style="left: 500px; top: 100px">
+    <draggable-document name="2" style="left: 500px; top: 100px">
       <h2>Note 2</h2>
 
       <article>
@@ -204,13 +204,13 @@
     </draggable-document>
 
     <xanadu-link
-      source="draggable-document[data-id='1'] [link='1']"
-      target="draggable-document[data-id='2'] [link='1']"
+      source="draggable-document[name='1'] [link='1']"
+      target="draggable-document[name='2'] [link='1']"
     ></xanadu-link>
 
     <xanadu-link
-      source="draggable-document[data-id='1'] [link='2']"
-      target="draggable-document[data-id='2'] [link='2']"
+      source="draggable-document[name='1'] [link='2']"
+      target="draggable-document[name='2'] [link='2']"
     ></xanadu-link>
 
     <script type="module">

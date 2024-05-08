@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Hyperedge</title>
+    <title>Convex Hull</title>
     <style>
       html {
         height: 100%;
@@ -17,13 +17,13 @@
 
       draggable-box {
         display: block;
-        width: 50px;
-        height: 50px;
+        width: 5px;
+        height: 5px;
         border: 2px solid black;
         position: absolute;
       }
 
-      hyper-arrow {
+      convex-hull {
         display: block;
         position: absolute;
         top: 0;
@@ -39,14 +39,14 @@
     <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
     <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
 
-    <hyper-arrow sources="#box1" targets="#box2, #box3"></hyper-arrow>
+    <convex-hull sources="draggable-box"></convex-hull>
 
     <script type="module">
-      import { AbstractHyperArrow } from '../src/abstract-hyper-arrow.ts';
+      import { ConvexHull } from '../src/convex-hull.ts';
       import { DraggableBox } from './draggable-box.ts';
 
       DraggableBox.register();
-      AbstractHyperArrow.register();
+      ConvexHull.register();
     </script>
   </body>
 </html>
