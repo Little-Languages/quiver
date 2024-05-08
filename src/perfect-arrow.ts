@@ -88,6 +88,7 @@ export class PerfectArrow extends AbstractArrow {
   protected createRenderRoot(): HTMLElement | DocumentFragment {
     const root = super.createRenderRoot();
 
+    this.#svg.setAttribute('part', 'svg-arrow');
     this.#svg.setAttribute('stroke', '#000');
     this.#svg.setAttribute('fill', '#000');
     this.#svg.setAttribute('stroke-width', '3');
