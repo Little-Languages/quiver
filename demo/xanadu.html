@@ -169,10 +169,46 @@
       </article>
     </draggable-document>
 
-    <draggable-document name="2" style="left: 500px; transform: scale(0.75)">
+    <draggable-document name="2" style="left: 500px">
       <h2>Note 2</h2>
 
       <article>
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
         <p>
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
@@ -238,7 +274,8 @@
       DraggableDocument.register();
 
       class AnimatedXanaduLink extends XanaduLink {
-        sourceAnimation;
+        sourceAnimation = null;
+        targetAnimation = null;
 
         observeSource() {
           super.observeSource();
@@ -264,6 +301,34 @@
           super.unobserveSource();
 
           this.sourceAnimation?.cancel();
+          this.sourceAnimation = null;
+        }
+
+        observeTarget() {
+          super.observeTarget();
+
+          this.targetAnimation = this.animate(
+            [
+              { opacity: 0.3, offset: 0 },
+              { opacity: 1, offset: 0.1 },
+              { opacity: 1, offset: 0.9 },
+              { opacity: 0.3, offset: 1 },
+            ],
+            {
+              timeline: new ViewTimeline({
+                subject: this.targetElement,
+              }),
+              rangeStart: 'entry 0%',
+              rangeEnd: 'exit 100%',
+            }
+          );
+        }
+
+        unobserveTarget() {
+          super.unobserveTarget();
+
+          this.targetAnimation?.cancel();
+          this.targetAnimation = null;
         }
       }
 
