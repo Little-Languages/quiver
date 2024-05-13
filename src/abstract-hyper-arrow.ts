@@ -39,7 +39,7 @@ export class AbstractHyperArrow extends ReactiveElement {
     this.#unobserveTargets();
   }
 
-  #observerSources() {
+  #observeSources() {
     this.#unobserveSources();
     this.#sourceElements = Array.from(document.querySelectorAll(this.sources));
     this.#updateSources();
@@ -113,7 +113,7 @@ export class AbstractHyperArrow extends ReactiveElement {
     }
 
     if (changedProperties.has('sources')) {
-      this.#observerSources();
+      this.#observeSources();
     } else {
       this.#updateSources();
     }

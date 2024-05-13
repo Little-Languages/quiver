@@ -4,40 +4,47 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Perfect Arrow - Xanadu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
     <style>
+      * {
+        box-sizing: border-box;
+      }
+
       html {
         height: 100%;
+        font-family: 'Inter', sans-serif;
+        font-optical-sizing: auto;
+        /* font-weight: <weight>; */
+        font-style: normal;
+        font-variation-settings: 'slnt' 0;
       }
 
       body {
+        background-color: #f0f0f0;
         margin: 0;
-        min-height: 100%;
+        height: 100%;
         position: relative;
-        --xanadu-bg: rgba(185, 233, 219, 0.75);
+        overflow-y: hidden;
       }
 
       draggable-document {
-        display: flex;
-        flex-direction: column;
-        border: 2px solid black;
-        border-radius: 1rem;
+        background-color: #fefefe;
+        border-radius: 0.5rem;
         width: 400px;
-        height: 900px;
         position: absolute;
         overflow: hidden;
         text-align: justify;
-        user-select: none;
+        max-height: 100%;
+        overflow: auto;
+        padding: 2rem;
 
         h2 {
-          background: gainsboro;
           margin: 0;
-          padding: 0.5rem 1rem;
-        }
-
-        article {
-          padding: 0 1rem;
-          overflow: auto;
-          flex: 1;
         }
       }
 
@@ -49,17 +56,36 @@
         bottom: 0;
         left: 0;
         pointer-events: none;
-        background-color: var(--xanadu-bg);
+        background-color: rgba(185 233 219 / 75%);
+        opacity: 0.3;
       }
     </style>
   </head>
   <body>
-    <draggable-document name="1" style="left: 20px; top: 200px">
+    <draggable-document name="1" style="left: 20px">
       <h2>Note 1</h2>
 
       <article>
         <p>
-          >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
           ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
           ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
           reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
@@ -113,10 +139,37 @@
           sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
           est laborum.
         </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
+
+        <p>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
+          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
+          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
+          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
+          est laborum.
+        </p>
       </article>
     </draggable-document>
 
-    <draggable-document name="2" style="left: 500px; top: 100px; transform: scale(0.75)">
+    <draggable-document name="2" style="left: 500px; transform: scale(0.75)">
       <h2>Note 2</h2>
 
       <article>
@@ -142,15 +195,6 @@
         </p>
 
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
           <span link="2"
             >Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
             incididunt ut labore et dolore magna aliqua.</span
@@ -159,33 +203,6 @@
           commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum
           dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in
           culpa qui officia deserunt mollit anim id est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
-        </p>
-
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt
-          ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-          ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-          sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-          est laborum.
         </p>
       </article>
     </draggable-document>
@@ -206,9 +223,51 @@
 
       class DraggableDocument extends DraggableBox {
         static tagName = 'draggable-document';
+
+        onMouseDrag({ movementX, movementY }) {
+          const { left, top } = getComputedStyle(this);
+          let leftValue = parseInt(left);
+          let topValue = parseInt(top) + movementY;
+          this.style.left = `${leftValue + movementX}px`;
+          if (this.offsetHeight < document.documentElement.clientHeight) {
+            this.style.top = `${topValue}px`;
+          }
+        }
       }
+
       DraggableDocument.register();
-      XanaduLink.register();
+
+      class AnimatedXanaduLink extends XanaduLink {
+        sourceAnimation;
+
+        observeSource() {
+          super.observeSource();
+
+          this.sourceAnimation = this.animate(
+            [
+              { opacity: 0.3, offset: 0 },
+              { opacity: 1, offset: 0.1 },
+              { opacity: 1, offset: 0.9 },
+              { opacity: 0.3, offset: 1 },
+            ],
+            {
+              timeline: new ViewTimeline({
+                subject: this.sourceElement,
+              }),
+              rangeStart: 'entry 0%',
+              rangeEnd: 'exit 100%',
+            }
+          );
+        }
+
+        unobserveSource() {
+          super.unobserveSource();
+
+          this.sourceAnimation?.cancel();
+        }
+      }
+
+      AnimatedXanaduLink.register();
     </script>
   </body>
 </html>

@@ -12,64 +12,64 @@ export class AbstractArrow extends ReactiveElement {
 
   static visualObserver = new VisualObserverManager();
 
-  #visualObserver = (this.constructor as typeof AbstractArrow).visualObserver;
+  visualObserver = (this.constructor as typeof AbstractArrow).visualObserver;
 
   /** A CSS selector for the source of the arrow. */
   @property({ type: String, reflect: true }) source: string = '';
-  #sourceElement: Element | null = null;
-  #sourceRect!: DOMRectReadOnly;
-  #sourceCallback = (entry: VisualObserverEntry) => {
-    this.#sourceRect = entry.contentRect;
+  sourceElement: Element | null = null;
+  sourceRect!: DOMRectReadOnly;
+  sourceCallback = (entry: VisualObserverEntry) => {
+    this.sourceRect = entry.contentRect;
     this.requestUpdate();
   };
 
   /** A CSS selector for the target of the arrow. */
   @property({ type: String, reflect: true }) target: string = '';
-  #targetElement: Element | null = null;
-  #targetRect!: DOMRectReadOnly;
-  #targetCallback = (entry: VisualObserverEntry) => {
-    this.#targetRect = entry.contentRect;
+  targetElement: Element | null = null;
+  targetRect!: DOMRectReadOnly;
+  targetCallback = (entry: VisualObserverEntry) => {
+    this.targetRect = entry.contentRect;
     this.requestUpdate();
   };
 
   disconnectedCallback() {
     super.disconnectedCallback();
-    this.#unobserveSource();
-    this.#unobserveTarget();
+    this.unobserveSource();
+    this.unobserveTarget();
   }
 
-  #observerSource() {
-    this.#unobserveSource();
-    this.#sourceElement = document.querySelector(this.source);
+  observeSource() {
+    this.unobserveSource();
+    this.sourceElement = document.querySelector(this.source);
 
-    if (!this.#sourceElement) {
+    if (!this.sourceElement) {
       throw new Error('source is not a valid element');
     }
 
-    this.#visualObserver.observe(this.#sourceElement, this.#sourceCallback);
+    this.visualObserver.observe(this.sourceElement, this.sourceCallback);
   }
 
-  #unobserveSource() {
-    if (this.#sourceElement === null) return;
+  unobserveSource() {
+    if (this.sourceElement === null) return;
 
-    this.#visualObserver.unobserve(this.#sourceElement, this.#sourceCallback);
+    this.visualObserver.unobserve(this.sourceElement, this.sourceCallback);
   }
 
-  #observeTarget() {
-    this.#unobserveTarget();
-    this.#targetElement = document.querySelector(this.target);
+  observeTarget() {
+    this.unobserveTarget();
+    this.targetElement = document.querySelector(this.target);
 
-    if (!this.#targetElement) {
+    if (!this.targetElement) {
       throw new Error('target is not a valid element');
     }
 
-    this.#visualObserver.observe(this.#targetElement, this.#targetCallback);
+    this.visualObserver.observe(this.targetElement, this.targetCallback);
   }
 
-  #unobserveTarget() {
-    if (this.#targetElement === null) return;
+  unobserveTarget() {
+    if (this.targetElement === null) return;
 
-    this.#visualObserver.unobserve(this.#targetElement, this.#targetCallback);
+    this.visualObserver.unobserve(this.targetElement, this.targetCallback);
   }
 
   update(changedProperties: PropertyValues) {
@@ -78,22 +78,22 @@ export class AbstractArrow extends ReactiveElement {
     if (!this.source || !this.target) return;
 
     if (changedProperties.has('source')) {
-      this.#observerSource();
+      this.observeSource();
     }
 
     if (changedProperties.has('target')) {
-      this.#observeTarget();
+      this.observeTarget();
     }
 
     if (
-      this.#sourceRect === undefined ||
-      this.#targetRect === undefined ||
-      this.#sourceElement === null ||
-      this.#targetElement === null
+      this.sourceRect === undefined ||
+      this.targetRect === undefined ||
+      this.sourceElement === null ||
+      this.targetElement === null
     )
       return;
 
-    this.render(this.#sourceRect, this.#targetRect, this.#sourceElement, this.#targetElement);
+    this.render(this.sourceRect, this.targetRect, this.sourceElement, this.targetElement);
   }
 
   render(

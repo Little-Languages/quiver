@@ -29,7 +29,7 @@ export class AbstractSet extends ReactiveElement {
     this.#unobserveSources();
   }
 
-  #observerSources() {
+  #observeSources() {
     this.#unobserveSources();
     this.#sourceElements = Array.from(document.querySelectorAll(this.sources));
     this.#updateSources();
@@ -69,7 +69,7 @@ export class AbstractSet extends ReactiveElement {
     }
 
     if (changedProperties.has('sources')) {
-      this.#observerSources();
+      this.#observeSources();
     } else {
       this.#updateSources();
     }
