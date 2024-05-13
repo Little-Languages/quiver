@@ -25,6 +25,7 @@ export class XanaduLink extends AbstractArrow {
       return;
     }
 
+    // To trace the link we need to rotate the vertices of the source to start on the bottom right corner.
     const maxRightCoordinate = Math.max.apply(
       null,
       sourceVertices.map((vertex) => vertex.x)
@@ -44,6 +45,7 @@ export class XanaduLink extends AbstractArrow {
   }
 }
 
+// The order that vertices are returned is significant
 function computeInlineVertices(rects: DOMRect[]): Vertex[] {
   rects = rects.map((rect) =>
     DOMRectReadOnly.fromRect({

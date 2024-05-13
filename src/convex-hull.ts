@@ -1,15 +1,26 @@
 import { AbstractSet } from './abstract-set.js';
+import { property } from '@lit/reactive-element/decorators.js';
 
 export class ConvexHull extends AbstractSet {
   static tagName = 'convex-hull';
 
+  /** How much to shrink wrap the convex hull. 0 applies no shrink, 1 maximizes shrinkage. */
+  @property({ type: String }) shrink: number = 0;
+
   render(sourceRects: ReadonlyMap<Element, DOMRectReadOnly>): void {
-    const hull = makeHull(Array.from(sourceRects.values()))
-      .map((point) => `${point.x}px ${point.y}px`)
-      .join(', ');
-    this.style.clipPath = `polygon(${hull})`;
+    this.style.clipPath = verticesToPolygon(makeHull(Array.from(sourceRects.values())));
   }
 }
+
+export function verticesToPolygon(vertices: Vertex[]): string {
+  if (vertices.length === 0) return '';
+
+  return `polygon(${vertices.map((vertex) => `${vertex.x}px ${vertex.y}px`).join(', ')})`;
+}
+
+// function shrinkHull(hull: Point[]): Curve[] {
+//   return [];
+// }
 
 /* This code has been modified from the original source, see the original source below. */
 /*
@@ -33,12 +44,12 @@ export class ConvexHull extends AbstractSet {
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-export interface Point {
+export interface Vertex {
   x: number;
   y: number;
 }
 
-function comparePoints(a: Point, b: Point): number {
+function comparePoints(a: Vertex, b: Vertex): number {
   if (a.x < b.x) return -1;
   if (a.x > b.x) return 1;
   if (a.y < b.y) return -1;
@@ -46,8 +57,8 @@ function comparePoints(a: Point, b: Point): number {
   return 0;
 }
 
-function makeHull(rects: DOMRectReadOnly[]): Point[] {
-  const points: Point[] = rects
+export function makeHull(rects: DOMRectReadOnly[]): Vertex[] {
+  const points: Vertex[] = rects
     .flatMap((rect) => [
       { x: rect.left, y: rect.top },
       { x: rect.right, y: rect.top },
@@ -62,12 +73,12 @@ function makeHull(rects: DOMRectReadOnly[]): Point[] {
   // as per the mathematical convention, instead of "down" as per the computer
   // graphics convention. This doesn't affect the correctness of the result.
 
-  const upperHull: Array<Point> = [];
+  const upperHull: Array<Vertex> = [];
   for (let i = 0; i < points.length; i++) {
-    const p: Point = points[i];
+    const p: Vertex = points[i];
     while (upperHull.length >= 2) {
-      const q: Point = upperHull[upperHull.length - 1];
-      const r: Point = upperHull[upperHull.length - 2];
+      const q: Vertex = upperHull[upperHull.length - 1];
+      const r: Vertex = upperHull[upperHull.length - 2];
       if ((q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x)) upperHull.pop();
       else break;
     }
@@ -75,12 +86,12 @@ function makeHull(rects: DOMRectReadOnly[]): Point[] {
   }
   upperHull.pop();
 
-  const lowerHull: Array<Point> = [];
+  const lowerHull: Array<Vertex> = [];
   for (let i = points.length - 1; i >= 0; i--) {
-    const p: Point = points[i];
+    const p: Vertex = points[i];
     while (lowerHull.length >= 2) {
-      const q: Point = lowerHull[lowerHull.length - 1];
-      const r: Point = lowerHull[lowerHull.length - 2];
+      const q: Vertex = lowerHull[lowerHull.length - 1];
+      const r: Vertex = lowerHull[lowerHull.length - 2];
       if ((q.x - r.x) * (p.y - r.y) >= (q.y - r.y) * (p.x - r.x)) lowerHull.pop();
       else break;
     }
