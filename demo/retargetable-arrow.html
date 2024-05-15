@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Perfect Arrow - Retarget</title>
+    <style>
+      html {
+        height: 100%;
+      }
+
+      body {
+        min-height: 100%;
+        position: relative;
+        margin: 0;
+      }
+
+      draggable-box {
+        display: block;
+        width: 50px;
+        height: 50px;
+        border: 2px solid black;
+        position: absolute;
+        z-index: 2;
+      }
+
+      retargetable-arrow {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <draggable-box id="box1" style="left: 0; top: 0"></draggable-box>
+    <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
+    <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
+
+    <retargetable-arrow source="#box1" target="#box2"></retargetable-arrow>
+
+    <script type="module">
+      import { PerfectArrow } from '../src/perfect-arrow.ts';
+      import { DraggableBox } from './draggable-box.ts';
+
+      class DroppableBox extends DraggableBox {
+        constructor() {
+          super();
+
+          this.addEventListener('dragover', this);
+          this.addEventListener('drop', this);
+        }
+
+        handleEvent(event) {
+          switch (event.type) {
+            case 'dragover': {
+              event.preventDefault();
+              return;
+            }
+            case 'drop': {
+              event.stopPropagation();
+              event.preventDefault();
+              const selector = event.dataTransfer.getData('text');
+              const arrow = document.querySelector(selector);
+
+              if (arrow) {
+                arrow.target = `#${this.id}`;
+              }
+              return;
+            }
+          }
+        }
+      }
+      DroppableBox.register();
+
+      class RetargetableArrow extends PerfectArrow {
+        static tagName = 'retargetable-arrow';
+
+        constructor() {
+          super();
+
+          this.addEventListener('mousedown', this);
+          this.addEventListener('dragstart', this);
+          this.addEventListener('dragend', this);
+        }
+
+        handleEvent(event) {
+          switch (event.type) {
+            case 'mousedown': {
+              const target = event.composedPath()[0];
+
+              if (target.tagName !== 'polygon') return;
+
+              this.setAttribute('draggable', 'true');
+              return;
+            }
+            case 'dragstart': {
+              event.dataTransfer.setData(
+                'text',
+                `retargetable-arrow[source="${this.source}"][target="${this.target}"]`
+              );
+              event.dataTransfer.setDragImage(new Image(), 0, 0);
+              return;
+            }
+            case 'dragend': {
+              this.removeAttribute('draggable');
+              return;
+            }
+          }
+        }
+      }
+
+      RetargetableArrow.register();
+    </script>
+  </body>
+</html>
