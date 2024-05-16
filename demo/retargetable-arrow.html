@@ -38,74 +38,56 @@
     <draggable-box id="box1" style="left: 0; top: 0"></draggable-box>
     <draggable-box id="box2" style="left: 100px; top: 200px"></draggable-box>
     <draggable-box id="box3" style="left: 200px; top: 100px"></draggable-box>
+    <draggable-box id="box4" style="left: 200px; top: 200px"></draggable-box>
 
-    <retargetable-arrow source="#box1" target="#box2"></retargetable-arrow>
+    <retargetable-arrow
+      source="#box1"
+      target="#box2"
+      valid-target="draggable-box:not(#box4)"
+    ></retargetable-arrow>
 
     <script type="module">
       import { PerfectArrow } from '../src/perfect-arrow.ts';
       import { DraggableBox } from './draggable-box.ts';
 
-      class DroppableBox extends DraggableBox {
-        constructor() {
-          super();
-
-          this.addEventListener('dragover', this);
-          this.addEventListener('drop', this);
-        }
-
-        handleEvent(event) {
-          switch (event.type) {
-            case 'dragover': {
-              event.preventDefault();
-              return;
-            }
-            case 'drop': {
-              event.stopPropagation();
-              event.preventDefault();
-              const selector = event.dataTransfer.getData('text');
-              const arrow = document.querySelector(selector);
-
-              if (arrow) {
-                arrow.target = `#${this.id}`;
-              }
-              return;
-            }
-          }
-        }
-      }
-      DroppableBox.register();
+      DraggableBox.register();
 
       class RetargetableArrow extends PerfectArrow {
         static tagName = 'retargetable-arrow';
 
+        #targetBeforeDrag = '';
+
         constructor() {
           super();
 
-          this.addEventListener('mousedown', this);
-          this.addEventListener('dragstart', this);
-          this.addEventListener('dragend', this);
+          this.addEventListener('pointerdown', this);
+          this.addEventListener('lostpointercapture', this);
         }
 
         handleEvent(event) {
           switch (event.type) {
-            case 'mousedown': {
+            case 'pointerdown': {
               const target = event.composedPath()[0];
 
               if (target.tagName !== 'polygon') return;
 
-              this.setAttribute('draggable', 'true');
+              this.addEventListener('pointermove', this);
+              this.setPointerCapture(event.pointerId);
+              this.#targetBeforeDrag = this.target;
+              this.style.opacity = '0.5';
               return;
             }
-            case 'dragstart': {
-              event.dataTransfer.setData(
-                'text',
-                `retargetable-arrow[source="${this.source}"][target="${this.target}"]`
-              );
-              event.dataTransfer.setDragImage(new Image(), 0, 0);
+            case 'pointermove': {
+              const element = document.elementFromPoint(event.clientX, event.clientY);
+              this.target = element.matches(this.getAttribute('valid-target'))
+                ? `#${element.id}`
+                : this.#targetBeforeDrag;
               return;
             }
-            case 'dragend': {
-              this.removeAttribute('draggable');
+            case 'lostpointercapture': {
+              this.#targetBeforeDrag = '';
+              this.style.opacity = '';
+              this.removeEventListener('pointermove', this);
               return;
             }
           }
