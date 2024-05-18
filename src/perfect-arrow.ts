@@ -2,7 +2,35 @@ import { AbstractArrow } from './abstract-arrow.js';
 import { property } from '@lit/reactive-element/decorators.js';
 import { getArrow, getBoxToBoxArrow, ArrowOptions } from 'perfect-arrows';
 
+const safeThreshold = 50;
+
 export type ArrowType = 'point' | 'box';
+
+export type BoundingBox = {
+  /** The minimum x-coordinate of the bounding box. */
+  min_x: number,
+  /** The maximum x-coordinate of the bounding box. */
+  max_x: number,
+  /** The minimum y-coordinate of the bounding box. */
+  min_y: number,
+  /** The maximum y-coordinate of the bounding box. */
+  max_y: number,
+};
+
+export type RelativeBox = {
+  /** The distance from the left edge of the container. */
+  left: number,
+  /** The distance from the right edge of the container. */
+  right: number,
+  /** The distance from the top edge of the container. */
+  top: number,
+  /** The distance from the bottom edge of the container. */
+  bottom: number,
+  /** The width of the box. */
+  width: number,
+  /** The height of the box. */
+  height: number,
+};
 
 export type Arrow = [
   /** The x position of the (padded) starting point. */
@@ -60,25 +88,32 @@ export class PerfectArrow extends AbstractArrow {
   #path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
   #polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
 
-  getArrow(sourceBox: DOMRectReadOnly, targetBox: DOMRectReadOnly, options: ArrowOptions): Arrow {
+  getRelativeBox(element: Element, boundingBox: BoundingBox) : RelativeBox {
+    const {min_x, min_y } = boundingBox;
+  
+    return {
+      "left": element.offsetLeft - min_x,
+      "right": element.offsetLeft + element.offsetWidth - min_x,
+      "bottom": element.offsetTop + element.offsetHeight - min_y,
+      "top": element.offsetTop - min_y,
+      "height": element.offsetHeight,
+      "width": element.offsetWidth
+    };
+  };
+
+  getArrow(sourceBox: RelativeBox, targetBox: RelativeBox, options: ArrowOptions): Arrow {
     switch (this.type) {
       case 'point': {
-        const sourceX = sourceBox.x + sourceBox.width / 2;
-        const sourceY = sourceBox.y + sourceBox.height / 2;
-        const targetX = targetBox.x + targetBox.width / 2;
-        const targetY = targetBox.y + targetBox.height / 2;
+        const sourceX = sourceBox.left + sourceBox.width / 2;
+        const sourceY = sourceBox.top + sourceBox.height / 2;
+        const targetX = targetBox.left + targetBox.width / 2;
+        const targetY = targetBox.top + targetBox.height / 2;
         return getArrow(sourceX, sourceY, targetX, targetY, options) as Arrow;
       }
       case 'box': {
         return getBoxToBoxArrow(
-          sourceBox.x,
-          sourceBox.y,
-          sourceBox.width,
-          sourceBox.height,
-          targetBox.x,
-          targetBox.y,
-          targetBox.width,
-          targetBox.height,
+          sourceBox.left, sourceBox.top, sourceBox.width, sourceBox.height,
+          targetBox.left, targetBox.top, targetBox.width, targetBox.height,
           options
         ) as Arrow;
       }
@@ -91,10 +126,8 @@ export class PerfectArrow extends AbstractArrow {
     this.#svg.setAttribute('part', 'svg-arrow');
     this.#svg.setAttribute('stroke', '#000');
     this.#svg.setAttribute('fill', '#000');
-    this.#svg.setAttribute('stroke-width', '3');
-    this.#svg.style.height = '100%';
-    this.#svg.style.width = '100%';
-
+    this.#svg.setAttribute('strokeWidth', '3');
+    this.#svg.style.position = 'absolute';
     this.#circle.setAttribute('r', '4');
 
     this.#path.setAttribute('fill', 'none');
@@ -109,24 +142,39 @@ export class PerfectArrow extends AbstractArrow {
 
   arrow: Arrow = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-  render(sourceRect: DOMRectReadOnly, targetRect: DOMRectReadOnly): void {
-    const [sx, sy, cx, cy, ex, ey, ae] = (this.arrow = this.getArrow(sourceRect, targetRect, {
-      bow: this.bow,
-      stretch: this.stretch,
-      stretchMin: this.stretchMin,
-      stretchMax: this.stretchMax,
-      padStart: this.padStart,
-      padEnd: this.padEnd,
-      flip: this.flip,
-      straights: this.straights,
-    }));
+  render(sourceRect: DOMRectReadOnly, targetRect: DOMRectReadOnly, sourceElement: Element, targetElement: Element): void {
+    const min_x = Math.min(sourceElement.offsetLeft, targetElement.offsetLeft) - safeThreshold;
+    const max_x = Math.max(sourceElement.offsetLeft + sourceElement.offsetWidth, targetElement.offsetLeft + targetElement.offsetWidth) + safeThreshold;
+    const min_y = Math.min(sourceElement.offsetTop, targetElement.offsetTop) - safeThreshold;
+    const max_y = Math.max(sourceElement.offsetTop + sourceElement.offsetHeight, targetElement.offsetTop + targetElement.offsetHeight) + safeThreshold;
+
+    const boundingBox = { min_x, max_x, min_y, max_y };
+    const sourceRelativeBox = this.getRelativeBox(sourceElement, boundingBox);
+    const targetRelativeBox = this.getRelativeBox(targetElement, boundingBox);
+    
+    const [sx, sy, cx, cy, ex, ey, ae] = (this.arrow = this.getArrow(sourceRelativeBox, targetRelativeBox,
+      {
+        bow: this.bow,
+        stretch: this.stretch,
+        stretchMin: this.stretchMin,
+        stretchMax: this.stretchMax,
+        padStart: this.padStart,
+        padEnd: this.padEnd,
+        flip: this.flip,
+        straights: this.straights,
+      }));
 
     const endAngleAsDegrees = ae * (180 / Math.PI);
 
     this.#circle.setAttribute('cx', sx.toString());
     this.#circle.setAttribute('cy', sy.toString());
 
-    this.#path.setAttribute('d', `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`);
+    const path = `M${sx},${sy} Q${cx},${cy} ${ex},${ey}`;
+    this.#path.setAttribute('d', path);
+        
+    this.#svg.style.width = `${max_x - min_x}px`;
+    this.#svg.style.height = `${max_y - min_y}px`;
+    this.#svg.style.transform = `translate(${min_x}px, ${min_y}px)`;
 
     this.#polygon.setAttribute('transform', `translate(${ex},${ey}) rotate(${endAngleAsDegrees})`);
   }
