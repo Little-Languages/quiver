@@ -87,6 +87,7 @@ export class PerfectArrow extends AbstractArrow {
 
   protected createRenderRoot(): HTMLElement | DocumentFragment {
     const root = super.createRenderRoot();
+    this.style.pointerEvents = 'none';
 
     this.#svg.setAttribute('part', 'svg-arrow');
     this.#svg.setAttribute('stroke', '#000');
@@ -94,12 +95,16 @@ export class PerfectArrow extends AbstractArrow {
     this.#svg.setAttribute('stroke-width', '3');
     this.#svg.style.height = '100%';
     this.#svg.style.width = '100%';
+    this.#svg.style.pointerEvents = 'none';
 
     this.#circle.setAttribute('r', '4');
+    this.#circle.style.pointerEvents = 'all';
 
     this.#path.setAttribute('fill', 'none');
+    this.#path.style.pointerEvents = 'all';
 
     this.#polygon.setAttribute('points', '0,-6 12,0, 0,6');
+    this.#polygon.style.pointerEvents = 'all';
 
     this.#svg.append(this.#circle, this.#path, this.#polygon);
     root.append(this.#svg);

@@ -47,53 +47,10 @@
     ></retargetable-arrow>
 
     <script type="module">
-      import { PerfectArrow } from '../src/perfect-arrow.ts';
       import { DraggableBox } from './draggable-box.ts';
+      import { RetargetableArrow } from './retargetable-arrow.ts';
 
       DraggableBox.register();
-
-      class RetargetableArrow extends PerfectArrow {
-        static tagName = 'retargetable-arrow';
-
-        #targetBeforeDrag = '';
-
-        constructor() {
-          super();
-
-          this.addEventListener('pointerdown', this);
-          this.addEventListener('lostpointercapture', this);
-        }
-
-        handleEvent(event) {
-          switch (event.type) {
-            case 'pointerdown': {
-              const target = event.composedPath()[0];
-
-              if (target.tagName !== 'polygon') return;
-
-              this.addEventListener('pointermove', this);
-              this.setPointerCapture(event.pointerId);
-              this.#targetBeforeDrag = this.target;
-              this.style.opacity = '0.5';
-              return;
-            }
-            case 'pointermove': {
-              const element = document.elementFromPoint(event.clientX, event.clientY);
-              this.target = element.matches(this.getAttribute('valid-target'))
-                ? `#${element.id}`
-                : this.#targetBeforeDrag;
-              return;
-            }
-            case 'lostpointercapture': {
-              this.#targetBeforeDrag = '';
-              this.style.opacity = '';
-              this.removeEventListener('pointermove', this);
-              return;
-            }
-          }
-        }
-      }
-
       RetargetableArrow.register();
     </script>
   </body>

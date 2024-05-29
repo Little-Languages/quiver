@@ -21,8 +21,8 @@ export class DraggableBox extends HTMLElement {
 
   onMouseDrag({ movementX, movementY }) {
     const { left, top } = window.getComputedStyle(this);
-    let leftValue = parseInt(left);
-    let topValue = parseInt(top);
+    const leftValue = parseInt(left);
+    const topValue = parseInt(top);
     this.style.left = `${leftValue + movementX}px`;
     this.style.top = `${topValue + movementY}px`;
   }

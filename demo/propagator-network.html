@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Propagator Network</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      html {
+        height: 100%;
+        font-family: 'Inter', sans-serif;
+        font-optical-sizing: auto;
+        /* font-weight: <weight>; */
+        font-style: normal;
+        font-variation-settings: 'slnt' 0;
+      }
+
+      body {
+        min-height: 100%;
+        position: relative;
+        margin: 0;
+      }
+
+      input {
+        position: absolute;
+        width: 5rem;
+      }
+
+      propagator-formula {
+        display: block;
+        border: 2px solid black;
+        position: absolute;
+        z-index: 2;
+      }
+
+      propagator-formula {
+        width: 125px;
+        height: 50px;
+        border-radius: 5px;
+
+        &::before {
+          content: attr(formula);
+          position: absolute;
+          top: 50%;
+          left: 0;
+          right: 0;
+          text-align: center;
+          transform: translateY(-50%);
+        }
+      }
+
+      propagator-arrow {
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+      }
+
+      propagator-arrow[name]::after {
+        content: attr(name);
+        display: inline-block;
+        position: absolute;
+        top: var(--cy);
+        left: var(--cx);
+        /* transform: rotate(var(--ac)) translateX(-50%); */
+        background: white;
+        padding: 0.1rem;
+      }
+    </style>
+  </head>
+  <body>
+    <input name="celsius" type="number" value="0" style="left: 10px; top: 100px" />
+    <input name="fahrenheit" type="number" value="32" style="left: 375px; top: 100px" />
+
+    <propagator-formula
+      name="c-to-f"
+      formula="(c * 9/5) + 32"
+      style="left: 150px; top: 25px"
+    ></propagator-formula>
+    <!-- <propagator-formula
+      name="f-to-c"
+      formula="(f - 32) * 5/9"
+      style="left: 150px; top: 150px"
+    ></propagator-formula> -->
+
+    <propagator-arrow
+      source="input[name='celsius']"
+      target="propagator-formula[name='c-to-f']"
+      name="c"
+      flip
+    ></propagator-arrow>
+    <propagator-arrow
+      source="propagator-formula[name='c-to-f']"
+      target="input[name='fahrenheit']"
+    ></propagator-arrow>
+    <!-- <propagator-arrow
+      source="input[name='fahrenheit']"
+      target="propagator-formula[name='f-to-c']"
+      parameter="f"
+      flip
+    ></propagator-arrow>
+    <propagator-arrow
+      source="propagator-formula[name='f-to-c']"
+      target="input[name='celsius']"
+    ></propagator-arrow> -->
+
+    <script type="module">
+      import { RetargetableArrow } from './retargetable-arrow.ts';
+      import { DraggableBox } from './draggable-box.ts';
+
+      class PropagatorFormula extends DraggableBox {
+        static tagName = 'propagator-formula';
+
+        #inputs = new Map();
+
+        value = undefined;
+
+        get formula() {
+          return this.getAttribute('formula');
+        }
+
+        set formula(formula) {
+          this.setAttribute('formula', formula);
+        }
+
+        attributeChangedCallback(name, oldValue, newValue) {
+          if (name === 'formula' && newValue != null) {
+          }
+        }
+
+        setInput(name, value) {
+          if (this.#inputs.get(name) !== value) {
+            this.#inputs.set(name, value);
+            this.#computeValue();
+          }
+        }
+
+        removeInput(name) {
+          this.#inputs.delete(name);
+          this.#computeValue();
+        }
+
+        #computeValue() {
+          const argumentNames = Array.from(this.#inputs.keys());
+          const args = Array.from(this.#inputs.values());
+
+          let functionBody = this.formula;
+
+          if (!functionBody.includes('return')) {
+            functionBody = `return ${functionBody}`;
+          }
+
+          try {
+            const func = new Function(argumentNames, functionBody);
+            const result = func(...args);
+
+            if (result !== undefined) {
+              this.value = result;
+              const event = new CustomEvent('input', { bubbles: false, cancelable: false });
+              this.dispatchEvent(event);
+            }
+          } catch (error) {
+            console.log(error);
+          }
+        }
+      }
+
+      PropagatorFormula.register();
+
+      class PropagatorArrow extends RetargetableArrow {
+        static tagName = 'propagator-arrow';
+
+        get name() {
+          return this.getAttribute('name');
+        }
+
+        set name(name) {
+          this.setAttribute('name', name);
+        }
+
+        observeSource() {
+          super.observeSource();
+
+          this.sourceElement.addEventListener('input', this);
+        }
+
+        unobserveSource() {
+          super.unobserveSource();
+
+          this.sourceElement?.removeEventListener('input', this);
+        }
+
+        observeTarget() {
+          super.observeTarget();
+
+          if (this.targetElement instanceof PropagatorFormula) {
+            this.targetElement.setInput(this.name, this.sourceElement.value);
+          }
+        }
+
+        unobserveTarget() {
+          super.unobserveTarget();
+
+          if (this.targetElement instanceof PropagatorFormula) {
+            this.targetElement.removeInput(this.name);
+          }
+        }
+
+        validTarget(element) {
+          return element.matches(':not(body, propagator-arrow)');
+        }
+
+        targetSelector(element) {
+          return `${element.tagName}[name='${element.getAttribute('name')}']`;
+        }
+
+        handleEvent(event) {
+          switch (event.type) {
+            case 'input': {
+              const value = this.sourceElement.value;
+              console.log(value);
+              if (this.targetElement instanceof PropagatorFormula) {
+                this.targetElement.setInput(this.name, value);
+              } else if ('value' in this.targetElement) {
+                this.targetElement.value = value;
+              }
+              return;
+            }
+            default:
+              super.handleEvent(event);
+          }
+        }
+
+        render(...args) {
+          super.render(...args);
+
+          const [, , cx, cy] = this.arrow;
+          this.style.setProperty('--cx', `${cx}px`);
+          this.style.setProperty('--cy', `${cy}px`);
+        }
+      }
+
+      PropagatorArrow.register();
+    </script>
+  </body>
+</html>
