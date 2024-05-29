@@ -82,11 +82,11 @@
       formula="(c * 9/5) + 32"
       style="left: 150px; top: 25px"
     ></propagator-formula>
-    <!-- <propagator-formula
+    <propagator-formula
       name="f-to-c"
       formula="(f - 32) * 5/9"
       style="left: 150px; top: 150px"
-    ></propagator-formula> -->
+    ></propagator-formula>
 
     <propagator-arrow
       source="input[name='celsius']"
@@ -98,20 +98,22 @@
       source="propagator-formula[name='c-to-f']"
       target="input[name='fahrenheit']"
     ></propagator-arrow>
-    <!-- <propagator-arrow
+    <propagator-arrow
       source="input[name='fahrenheit']"
       target="propagator-formula[name='f-to-c']"
-      parameter="f"
+      name="f"
       flip
     ></propagator-arrow>
     <propagator-arrow
       source="propagator-formula[name='f-to-c']"
       target="input[name='celsius']"
-    ></propagator-arrow> -->
+    ></propagator-arrow>
 
     <script type="module">
       import { RetargetableArrow } from './retargetable-arrow.ts';
       import { DraggableBox } from './draggable-box.ts';
+
+      // const AsyncFunction = async function () {}.constructor;
 
       class PropagatorFormula extends DraggableBox {
         static tagName = 'propagator-formula';
@@ -165,7 +167,7 @@
               this.dispatchEvent(event);
             }
           } catch (error) {
-            console.log(error);
+            console.error(error);
           }
         }
       }
@@ -223,7 +225,6 @@
           switch (event.type) {
             case 'input': {
               const value = this.sourceElement.value;
-              console.log(value);
               if (this.targetElement instanceof PropagatorFormula) {
                 this.targetElement.setInput(this.name, value);
               } else if ('value' in this.targetElement) {
